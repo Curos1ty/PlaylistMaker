@@ -1,18 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/blue_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_22sp"
+        app:titleTextColor="@color/white"
+        app:buttonGravity="center_vertical"
+        app:title="@string/app_name"
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_0dp"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_16dp"
+            android:layout_marginTop="24dp"
+            android:layout_weight="1"
+            app:cornerRadius="@dimen/corner_radius_16dp"
+            app:icon="@drawable/search"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/icon_padding_10dp"
+            app:iconTint="@color/black"
+            android:scaleType="matrix"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
+            android:text="@string/text_search"
+            android:textSize="@dimen/text_size_22sp"/>
+
+        <Button
+            android:id="@+id/media_library"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_0dp"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_16dp"
+            app:cornerRadius="@dimen/corner_radius_16dp"
+            app:icon="@drawable/media_library"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/icon_padding_10dp"
+            app:iconTint="@color/black"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:scaleType="matrix"
+            android:textColor="@color/black"
+            android:text="@string/text_media_library"
+            android:textSize="@dimen/text_size_22sp"
+            />
+        <Button
+            android:id="@+id/settings"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_0dp"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_16dp"
+            app:cornerRadius="@dimen/corner_radius_16dp"
+            app:icon="@drawable/settings"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/icon_padding_10dp"
+            app:iconTint="@color/black"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:scaleType="matrix"
+            android:textColor="@color/black"
+            android:text="@string/text_settings"
+            android:textSize="@dimen/text_size_22sp"
+            />
+
+</LinearLayout>
+
+
