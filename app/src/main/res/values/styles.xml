@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ButtonStyleMain">
+        <item name="android:textSize">@dimen/text_size_22sp</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/icon_padding_10dp</item>
+        <item name="iconTint">@color/black</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:scaleType">matrix</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:layout_marginHorizontal">@dimen/margin_horizontal_16dp</item>
+        <item name="cornerRadius">@dimen/corner_radius_16dp</item>
+    </style>
+
+    <style name="ButtonStyleSettings">
+        <item name="android:paddingHorizontal">@dimen/paddingHorizontal_16dp</item>
+        <item name="android:paddingVertical">@dimen/padding_vertical_20dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+        <item name="thumbTint">@color/gray</item>
+        <item name="trackTint">@color/switch_light_theme_back</item>
+        <item name="android:drawableTint">@color/gray</item>
+    </style>
+
+    <style name="EditStyleSearch">
+        <item name="android:background">@color/gray_for_search</item>
+        <item name="android:paddingHorizontal">@dimen/paddingHorizontal_16dp</item>
+        <item name="android:layout_marginHorizontal">@dimen/margin_horizontal_16dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/gray</item>
+        <item name="iconPadding">@dimen/icon_padding_10dp</item>
+        <item name="android:drawableTint">@color/gray</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+    </style>
+
+    <style name="ToolbarBase">
+        <item name="android:layout_height">@dimen/layout_height_toolbar_56dp</item>
+        <item name="android:textSize">@dimen/text_size_22sp</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+
+</resources>
