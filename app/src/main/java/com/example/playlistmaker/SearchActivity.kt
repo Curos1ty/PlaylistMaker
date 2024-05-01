@@ -13,6 +13,10 @@ import androidx.appcompat.widget.Toolbar
 
 class SearchActivity : AppCompatActivity() {
     private var searchText: String = ""
+
+    companion object {
+        private const val SEARCH_TEXT_KEY = "searchText"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -41,22 +45,23 @@ class SearchActivity : AppCompatActivity() {
         clearButton.setOnClickListener {
             inputEditTextSearch.setText("")
             inputEditTextSearch.hideKeyboard()
+            inputEditTextSearch.clearFocus()
         }
 
         if (savedInstanceState != null) {
-            searchText = savedInstanceState.getString("searchText", "")
+            searchText = savedInstanceState.getString(SEARCH_TEXT_KEY, "")
             inputEditTextSearch.setText(searchText)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("searchText", searchText)
+        outState.putString(SEARCH_TEXT_KEY, searchText)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        searchText = savedInstanceState.getString("searchText", "")
+        searchText = savedInstanceState.getString(SEARCH_TEXT_KEY, "")
     }
 
 }

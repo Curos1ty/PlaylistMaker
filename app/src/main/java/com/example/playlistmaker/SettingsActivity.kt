@@ -44,9 +44,9 @@ class SettingsActivity : AppCompatActivity() {
         shareIntent.putExtra(Intent.EXTRA_TEXT, message)
 
         try {
-            startActivity(Intent.createChooser(shareIntent, "Поделиться приложением"))
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.text_share_app)))
         } catch (e: Exception) {
-            Toast.makeText(this, "Не удалось открыть окно чтобы поделиться приложением", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.text_errors_share_app), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -61,9 +61,9 @@ class SettingsActivity : AppCompatActivity() {
         supportIntent.putExtra(Intent.EXTRA_TEXT, message)
 
         try {
-            startActivity(Intent.createChooser(supportIntent, "Написать в поддержку"))
+            startActivity(Intent.createChooser(supportIntent, getString(R.string.text_support)))
         } catch (e:Exception) {
-            Toast.makeText(this, "Не удалось открыть окно для отправки сообщения тех. поддержке", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.text_errors_write_support), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -73,9 +73,9 @@ class SettingsActivity : AppCompatActivity() {
         linkUserAgreementIntent.data = Uri.parse(linkUserAgreement)
 
         try {
-            startActivity(Intent.createChooser(linkUserAgreementIntent, "Пользовательское соглашение"))
+            startActivity(Intent.createChooser(linkUserAgreementIntent, getString(R.string.text_user_agreement)))
         } catch (e:Exception) {
-            Toast.makeText(this, "Не удалось открыть браузер", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.text_errors_open_browser), Toast.LENGTH_SHORT).show()
         }
 
     }
