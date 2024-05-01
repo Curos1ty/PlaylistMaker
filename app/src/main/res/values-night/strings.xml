@@ -16,4 +16,5 @@
     <string name="text_errors_share_app">Не удалось открыть окно чтобы поделиться приложением</string>
     <string name="text_errors_write_support">Не удалось открыть окно для отправки сообщения тех. поддержке</string>
     <string name="text_errors_open_browser">Не удалось открыть браузер</string>
+
 </resources>

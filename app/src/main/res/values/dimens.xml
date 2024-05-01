@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_horizontal_16dp">16dp</dimen>
+    <dimen name="corner_radius_16dp">16dp</dimen>
+    <dimen name="paddingHorizontal_16dp">16dp</dimen>
+    <dimen name="text_size_22sp">22sp</dimen>
+    <dimen name="text_size_16sp">16sp</dimen>
+    <dimen name="icon_padding_10dp">10dp</dimen>
+    <dimen name="height_0dp">0dp</dimen>
+    <dimen name="padding_vertical_20dp">20dp</dimen>
+    <dimen name="layout_height_toolbar_56dp">56dp</dimen>
+    <dimen name="layout_margin_top_24dp">24dp</dimen>
+</resources>
