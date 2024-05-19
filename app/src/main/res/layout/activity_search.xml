@@ -18,9 +18,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        >
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/inputEditTextSearch"
@@ -40,8 +38,8 @@
             />
 
         <ImageButton
-            style="@style/EditSearchImageClear"
             android:id="@+id/clear_search_button_icon"
+            style="@style/EditSearchImageClear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
@@ -51,5 +49,13 @@
             android:src="@drawable/ic_menu_close_clear_cancel"
             android:visibility="gone" />
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/item_track" />
+
 
 </LinearLayout>
