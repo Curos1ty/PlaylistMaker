@@ -5,18 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
 class SearchActivity : AppCompatActivity() {
     private var searchText: String = ""
@@ -72,12 +66,10 @@ class SearchActivity : AppCompatActivity() {
         )
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-
         val trackAdapter = TrackAdapter(trackList)
         recyclerView.adapter = trackAdapter
 
         val toolbar = findViewById<Toolbar>(R.id.search_toolbar)
-
         toolbar.setNavigationOnClickListener {
             finish()
         }
@@ -124,49 +116,4 @@ class SearchActivity : AppCompatActivity() {
 fun View.hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(windowToken, 0)
-}
-
-
-data class Track(
-    val trackName: String,
-    val artistName: String,
-    val trackTime: String,
-    val artworkUrl100: String
-)
-
-class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val trackNameTextView: TextView = itemView.findViewById(R.id.songTitle)
-    private val artistNameTextView: TextView = itemView.findViewById(R.id.songArtist)
-    private val artworkImageView: ImageView = itemView.findViewById(R.id.songImage)
-
-    fun bind(track: Track) {
-        trackNameTextView.text = track.trackName
-        val separator = "\u2022"
-        artistNameTextView.text = "${track.artistName} $separator ${track.trackTime}"
-
-        Glide.with(itemView)
-            .load(track.artworkUrl100)
-            .placeholder(R.drawable.settings)
-            .transform(RoundedCorners(2))
-            .into(artworkImageView)
-
-
-    }
-}
-
-class TrackAdapter(private val trackList: List<Track>) : RecyclerView.Adapter<TrackViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val itemView =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
-        return TrackViewHolder(itemView)
-    }
-
-    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        val track = trackList[position]
-        holder.bind(track)
-    }
-
-    override fun getItemCount(): Int {
-        return trackList.size
-    }
 }
