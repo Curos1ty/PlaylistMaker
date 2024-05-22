@@ -51,4 +51,19 @@
         <item name="tint">@color/gray</item>
     </style>
 
+    <style name="textItemSongTrack">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+
+    <style name="textItemArtistDurationTrack">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+
+    <style name="imageArrowForSong">
+        <item name="tint">@color/gray</item>
+    </style>
+
+
 </resources>

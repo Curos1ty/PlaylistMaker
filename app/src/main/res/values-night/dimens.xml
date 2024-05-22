@@ -10,4 +10,14 @@
     <dimen name="padding_vertical_20dp">20dp</dimen>
     <dimen name="layout_height_toolbar_56dp">56dp</dimen>
     <dimen name="layout_margin_top_24dp">24dp</dimen>
+    <dimen name="layout_margin_top_8dp">8dp</dimen>
+    <dimen name="layout_marginStart_13dp">13dp</dimen>
+    <dimen name="layout_wh45dp">45dp</dimen>
+    <dimen name="layout_height_61dp">61dp</dimen>
+    <dimen name="cardCornerRadius_8dp">8dp</dimen>
+    <dimen name="layout_marginTop_14dp">14dp</dimen>
+    <dimen name="text_size_11sp">11sp</dimen>
+    <dimen name="layout_wh24dp">24dp</dimen>
+    <dimen name="layout_marginTop_18dp">18dp</dimen>
+    <dimen name="layout_marginEnd_12dp">12dp</dimen>
 </resources>
