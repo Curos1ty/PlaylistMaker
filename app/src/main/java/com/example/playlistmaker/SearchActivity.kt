@@ -6,14 +6,36 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.api.ITunesApi
+import com.example.playlistmaker.model.Track
+import com.example.playlistmaker.model.TrackSearchResponse
+import com.example.playlistmaker.network.RetrofitClient
+import retrofit2.Callback
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Query
 
 class SearchActivity : AppCompatActivity() {
     private var searchText: String = ""
+    private lateinit var trackAdapter: TrackAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var noResultsPlaceholder: View
+    private lateinit var errorInternetPlaceholder: View
+    private lateinit var retryButton: Button
+    private lateinit var queryInputSearchMusic: EditText
+    private lateinit var clearButton: ImageButton
+    private var lastQuery: String = ""
 
     companion object {
         private const val SEARCH_TEXT_KEY = "searchText"
@@ -23,51 +45,25 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val trackList = ArrayList<Track>()
-        trackList.add(
-            Track(
-                trackName = "Smells Like Teen Spirit",
-                artistName = "Nirvana",
-                trackTime = "5:01",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
-            )
-        )
-        trackList.add(
-            Track(
-                trackName = "Billie Jean",
-                artistName = "Michael Jackson",
-                trackTime = "4:35",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"
-            )
-        )
-        trackList.add(
-            Track(
-                trackName = "Stayin' Alive",
-                artistName = "Bee Gees",
-                trackTime = "4:10",
-                artworkUrl100 = "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"
-            )
-        )
-        trackList.add(
-            Track(
-                trackName = "Whole Lotta Love",
-                artistName = "Led Zeppelin",
-                trackTime = "5:33",
-                artworkUrl100 = "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"
-            )
-        )
-        trackList.add(
-            Track(
-                trackName = "Sweet Child O'Mine",
-                artistName = "Guns N' Roses",
-                trackTime = "5:03",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
-            )
-        )
+        queryInputSearchMusic = findViewById(R.id.inputEditTextSearch)
+        queryInputSearchMusic.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                val query = queryInputSearchMusic.text.toString()
+                searchSongs(query)
+                true
+            }
+            false
+        }
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        val trackAdapter = TrackAdapter(trackList)
+        val trackList = mutableListOf<Track>()
+
+        trackAdapter = TrackAdapter(trackList)
+        recyclerView = findViewById(R.id.recyclerView)
         recyclerView.adapter = trackAdapter
+
+        noResultsPlaceholder = findViewById(R.id.no_results_placeholder)
+        errorInternetPlaceholder = findViewById(R.id.connection_error_placeholder)
+        retryButton = findViewById(R.id.retry_button)
 
         val toolbar = findViewById<Toolbar>(R.id.search_toolbar)
         toolbar.setNavigationOnClickListener {
@@ -75,7 +71,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         val inputEditTextSearch = findViewById<AppCompatEditText>(R.id.inputEditTextSearch)
-        val clearButton = findViewById<ImageButton>(R.id.clear_search_button_icon)
+        clearButton = findViewById<ImageButton>(R.id.clear_search_button_icon)
 
         inputEditTextSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -93,8 +89,12 @@ class SearchActivity : AppCompatActivity() {
             inputEditTextSearch.setText("")
             inputEditTextSearch.hideKeyboard()
             inputEditTextSearch.clearFocus()
+            clearSearchResults()
         }
 
+        retryButton.setOnClickListener {
+            searchSongs(lastQuery)
+        }
         if (savedInstanceState != null) {
             searchText = savedInstanceState.getString(SEARCH_TEXT_KEY, "")
             inputEditTextSearch.setText(searchText)
@@ -111,9 +111,66 @@ class SearchActivity : AppCompatActivity() {
         searchText = savedInstanceState.getString(SEARCH_TEXT_KEY, "")
     }
 
+    private fun searchSongs(query: String) {
+        if (query.isNotEmpty()) {
+            lastQuery = query
+            val call = RetrofitClient.iTunesApiService.searchSongs(query)
+            call.enqueue(object : Callback<TrackSearchResponse> {
+                override fun onResponse(
+                    call: Call<TrackSearchResponse>,
+                    response: Response<TrackSearchResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val songs = response.body()?.results ?: emptyList()
+                        if (songs.isEmpty()) {
+                            showNoResultsPlaceholder()
+                        } else {
+                            trackAdapter.updateData(songs)
+                            showResults()
+                        }
+                    } else {
+                        showErrorPlaceholder()
+                    }
+                }
+
+                override fun onFailure(call: Call<TrackSearchResponse>, t: Throwable) {
+                    showErrorPlaceholder()
+                }
+            })
+        } else {
+            clearSearchResults()
+        }
+    }
+
+    private fun clearSearchResults() {
+        trackAdapter.updateData(emptyList())
+        recyclerView.visibility = View.GONE
+        noResultsPlaceholder.visibility = View.GONE
+        errorInternetPlaceholder.visibility = View.GONE
+    }
+
+    private fun showResults() {
+        recyclerView.visibility = View.VISIBLE
+        noResultsPlaceholder.visibility = View.GONE
+        errorInternetPlaceholder.visibility = View.GONE
+    }
+
+    private fun showNoResultsPlaceholder() {
+        recyclerView.visibility = View.GONE
+        noResultsPlaceholder.visibility = View.VISIBLE
+        errorInternetPlaceholder.visibility = View.GONE
+    }
+
+    private fun showErrorPlaceholder() {
+        recyclerView.visibility = View.GONE
+        noResultsPlaceholder.visibility = View.GONE
+        errorInternetPlaceholder.visibility = View.VISIBLE
+    }
+
 }
 
 fun View.hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(windowToken, 0)
 }
+

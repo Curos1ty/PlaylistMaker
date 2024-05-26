@@ -38,7 +38,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="@dimen/text_size_16sp"
-            tools:text="1233333333333333333333333333333333333333" />
+            tools:text="123" />
 
         <TextView
             android:id="@+id/songArtist"
@@ -48,7 +48,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="@dimen/text_size_11sp"
-            tools:text="123333333333333333333333333333333333333323213213213123123" />
+            tools:text="123" />
     </LinearLayout>
 
     <ImageView

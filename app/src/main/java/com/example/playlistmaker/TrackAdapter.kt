@@ -3,8 +3,15 @@ package com.example.playlistmaker
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.model.Track
 
-class TrackAdapter(private val trackList: List<Track>) : RecyclerView.Adapter<TrackViewHolder>() {
+class TrackAdapter(private val trackList: MutableList<Track>) : RecyclerView.Adapter<TrackViewHolder>() {
+
+    fun updateData(newTrackList: List<Track>) {
+        trackList.clear()
+        trackList.addAll(newTrackList)
+        notifyDataSetChanged()
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
