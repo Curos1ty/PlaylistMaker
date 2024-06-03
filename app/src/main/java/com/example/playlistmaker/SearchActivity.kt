@@ -36,9 +36,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var clearButton: ImageButton
     private lateinit var searchField: EditText
     private lateinit var hintMessage: TextView
-
     private var lastQuery: String = ""
-
     private lateinit var searchHistoryAdapter: TrackAdapter
     private lateinit var searchHistory: SearchHistory
     private lateinit var searchHistoryTitle: TextView
