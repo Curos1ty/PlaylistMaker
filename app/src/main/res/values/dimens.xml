@@ -20,10 +20,4 @@
     <dimen name="layout_wh24dp">24dp</dimen>
     <dimen name="layout_marginTop_18dp">18dp</dimen>
     <dimen name="layout_marginEnd_12dp">12dp</dimen>
-    <dimen name="layout_marginTop_102dp">120dp</dimen>
-    <dimen name="text_size_14sp">14sp</dimen>
-    <dimen name="corner_radius_54dp">54dp</dimen>
-    <dimen name="padding_6dp">6dp</dimen>
-    <dimen name="padding_8dp">8dp</dimen>
-    <dimen name="text_size_19sp">19sp</dimen>
 </resources>
