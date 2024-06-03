@@ -36,6 +36,7 @@
         android:layout_height="wrap_content"
         android:drawableEnd="@drawable/image_share"
         android:text="@string/text_share_app"
+
         />
 
     <com.google.android.material.textview.MaterialTextView

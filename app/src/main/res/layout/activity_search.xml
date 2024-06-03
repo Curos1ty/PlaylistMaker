@@ -30,12 +30,12 @@
             android:drawablePadding="5dp"
             android:focusable="true"
             android:hint="@string/text_search"
-            android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLength="30"
             android:maxLines="1"
-            android:singleLine="true"
-            android:textCursorDrawable="@drawable/cursor_edit_search" />
+            android:textCursorDrawable="@drawable/cursor_edit_search"
+
+            />
 
         <ImageButton
             android:id="@+id/clear_search_button_icon"
@@ -48,111 +48,14 @@
             android:contentDescription="@string/clearButtonDesc"
             android:src="@drawable/ic_menu_close_clear_cancel"
             android:visibility="gone" />
-
     </FrameLayout>
-
-    <TextView android:id="@+id/searchHint"
-        style="@style/messageHint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:layout_marginHorizontal="8dp"
-        android:textAlignment="center"
-        android:text="@string/messageHintSearch"
-        android:visibility="gone"
-        />
-
-    <LinearLayout
-        android:id="@+id/search_history_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <TextView
-            android:id="@+id/search_history_title"
-            style="@style/searchHistoryTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/search_history_title"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_history_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layoutManager="LinearLayoutManager"
-            android:visibility="gone"/>
-
-        <Button android:id="@+id/clear_history_button"
-            style="@style/imageRetrySearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/clear_history"
-            android:layout_marginTop="24dp" />
-    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/item_track"
-        android:visibility="gone"/>
-
-    <LinearLayout
-        android:id="@+id/no_results_placeholder"
-        style="@style/layout_placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/empty_search" />
-
-        <TextView
-            style="@style/textEmptySearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/corner_radius_16dp"
-            android:text="@string/empty_search" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/connection_error_placeholder"
-        style="@style/layout_placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/no_internet" />
-
-        <TextView
-            style="@style/textEmptySearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/no_internet" />
-
-        <Button
-            android:id="@+id/retry_button"
-            style="@style/imageRetrySearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/refresh" />
-
-
-    </LinearLayout>
+        tools:listitem="@layout/item_track" />
 
 
 </LinearLayout>
