@@ -96,8 +96,6 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton = findViewById(R.id.clear_search_button_icon)
 
-
-
         searchField.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 searchText = s.toString()
