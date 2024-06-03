@@ -19,4 +19,7 @@
     <string name="empty_search">Ничего не нашлось</string>
     <string name="no_internet">Проблемы со связью \n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="refresh">Обновить</string>
+    <string name="messageHintSearch">Введите название трека или исполнителя</string>
+    <string name="search_history_title">Вы искали</string>
+    <string name="clear_history">Очистить историю</string>
 </resources>
