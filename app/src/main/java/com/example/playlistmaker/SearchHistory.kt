@@ -1,16 +1,20 @@
 package com.example.playlistmaker
 
+import android.content.Context
 import android.content.SharedPreferences
 import com.example.playlistmaker.model.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SearchHistory(private val sharedPreferences: SharedPreferences) {
+class SearchHistory(private val context: Context) {
     companion object {
+        private const val SEARCH_PREFS_NAME = "SearchPrefs"
         private const val SEARCH_TEXT_KEY = "searchHistoryText"
         private const val MAX_HISTORY_SIZE = 10
     }
-
+    private val sharedPreferences: SharedPreferences by lazy {
+        context.getSharedPreferences(SEARCH_PREFS_NAME, Context.MODE_PRIVATE)
+    }
     fun saveHistory(newTrack: Track) {
         val historyList = getHistory()
 
