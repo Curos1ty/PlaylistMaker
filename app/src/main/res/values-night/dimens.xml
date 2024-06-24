@@ -25,4 +25,5 @@
     <dimen name="corner_radius_54dp">54dp</dimen>
     <dimen name="padding_6dp">6dp</dimen>
     <dimen name="padding_8dp">8dp</dimen>
+    <dimen name="text_size_19sp">19sp</dimen>
 </resources>
