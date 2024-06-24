@@ -26,4 +26,7 @@
     <dimen name="padding_6dp">6dp</dimen>
     <dimen name="padding_8dp">8dp</dimen>
     <dimen name="text_size_19sp">19sp</dimen>
+    <dimen name="text_size_13sp">13sp</dimen>
+    <dimen name="size_button_player_51dp">51dp</dimen>
+    <dimen name="wh_0dp">0dp</dimen>
 </resources>

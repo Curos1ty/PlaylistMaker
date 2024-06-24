@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -28,7 +27,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 
-class SearchActivity : AppCompatActivity(){
+class SearchActivity : AppCompatActivity() {
     private var searchText: String = ""
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var recyclerViewSearch: RecyclerView
@@ -48,6 +47,7 @@ class SearchActivity : AppCompatActivity(){
     private lateinit var clearHistoryButton: Button
 
     private lateinit var visibilityLinerLayoutHistory: LinearLayout
+
     companion object {
         private const val SEARCH_TEXT_KEY = "searchText"
     }
@@ -150,7 +150,7 @@ class SearchActivity : AppCompatActivity(){
 
     private fun searchSongs(query: String) {
         if (query.isNotEmpty()) {
-            Log.i("Запрос для песен не пустой", query)
+            //Log.i("Запрос для песен не пустой", query)
             lastQuery = query
             val call = RetrofitClient.iTunesApiService.searchSongs(query)
 
@@ -160,7 +160,7 @@ class SearchActivity : AppCompatActivity(){
                 ) {
                     if (response.isSuccessful) {
                         val songs = response.body()?.results ?: emptyList()
-                        Log.i("Проверка Response", songs.toString())
+                        //Log.i("Проверка Response", songs.toString())
                         if (songs.isEmpty()) {
                             showNoResultsPlaceholder()
                         } else {
@@ -189,7 +189,7 @@ class SearchActivity : AppCompatActivity(){
     }
 
     private fun showResults() {
-        Log.i("Сюда зашло", recyclerViewSearch.visibility.toString())
+        //Log.i("Сюда зашло", recyclerViewSearch.visibility.toString())
         recyclerViewSearch.visibility = View.VISIBLE
         noResultsPlaceholder.visibility = View.GONE
         errorInternetPlaceholder.visibility = View.GONE
@@ -224,6 +224,7 @@ class SearchActivity : AppCompatActivity(){
     private fun clearSearchHistory() {
         visibilityLinerLayoutHistory.visibility = View.GONE
         searchHistory.clearHistory()
+        clearSearchResults()
     }
 }
 

@@ -22,4 +22,16 @@
     <string name="messageHintSearch">Введите название трека или исполнителя</string>
     <string name="search_history_title">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
+    <string name="album_art">обложка альбома</string>
+    <string name="add_to_playlist">добавить в плейлист</string>
+    <string name="play_pause">Включить, пауза</string>
+    <string name="favourite">добавить в избранное</string>
+    <string name="unknownAlbum">Неизвестный альбом</string>
+    <string name="duration">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="releaseYear">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
+
+
 </resources>

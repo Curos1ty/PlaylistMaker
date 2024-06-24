@@ -106,5 +106,42 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 
+    <style name="baseTrackDescription">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="playerTrackName" parent="baseTrackDescription">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">@dimen/text_size_22sp</item>
+    </style>
+    <style name="playerArtistName" parent="baseTrackDescription">
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+    </style>
+
+    <style name="playerDescriptionSong">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_size_13sp</item>
+    </style>
+    <style name="playerDescriptionSongLeft" parent="playerDescriptionSong">
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="playerDescriptionSongRight" parent="playerDescriptionSong">
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">end</item>
+    </style>
+
+    <style name="optional_buttons">
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:layout_width">@dimen/size_button_player_51dp</item>
+        <item name="android:layout_height">@dimen/size_button_player_51dp</item>
+    </style>
+
 
 </resources>
