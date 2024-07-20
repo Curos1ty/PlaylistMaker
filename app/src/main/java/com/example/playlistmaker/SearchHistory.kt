@@ -12,9 +12,11 @@ class SearchHistory(private val context: Context) {
         private const val SEARCH_TEXT_KEY = "searchHistoryText"
         private const val MAX_HISTORY_SIZE = 10
     }
+
     private val sharedPreferences: SharedPreferences by lazy {
         context.getSharedPreferences(SEARCH_PREFS_NAME, Context.MODE_PRIVATE)
     }
+
     fun saveHistory(newTrack: Track) {
         val historyList = getHistory()
 

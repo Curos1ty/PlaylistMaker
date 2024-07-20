@@ -62,36 +62,52 @@
         android:textAlignment="center"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/search_history_layout"
+    <ProgressBar
+        android:id="@+id/search_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="140dp"
+        android:indeterminateTint="@color/blue_background"
+        android:visibility="gone" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/layout_margin_top_24dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/search_history_title"
-            style="@style/searchHistoryTitle"
+        <LinearLayout
+            android:id="@+id/search_history_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/search_history_title" />
+            android:layout_marginTop="@dimen/layout_margin_top_24dp"
+            android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_history_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/item_track" />
+            <TextView
+                android:id="@+id/search_history_title"
+                style="@style/searchHistoryTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/search_history_title" />
 
-        <Button
-            android:id="@+id/clear_history_button"
-            style="@style/imageRetrySearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/clear_history" />
-    </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_history_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layoutManager="LinearLayoutManager"
+                tools:listitem="@layout/item_track"
+                />
+
+            <Button
+                android:id="@+id/clear_history_button"
+                style="@style/imageRetrySearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/clear_history" />
+        </LinearLayout>
+    </ScrollView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_recycler_view_itunes"
@@ -100,7 +116,7 @@
         android:layout_marginTop="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/item_track"
-        tools:text="123" />
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/no_results_placeholder"
@@ -122,6 +138,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/corner_radius_16dp"
+            android:layout_marginBottom="24dp"
             android:text="@string/empty_search" />
 
     </LinearLayout>

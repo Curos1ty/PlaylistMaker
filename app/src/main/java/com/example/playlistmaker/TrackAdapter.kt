@@ -1,9 +1,12 @@
 package com.example.playlistmaker
 
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.AudioPlayer.Companion.DATA_TRACK
 import com.example.playlistmaker.model.Track
 
 class TrackAdapter(
@@ -13,9 +16,11 @@ class TrackAdapter(
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
     companion object {
-        const val DATA_TRACK = "trackData"
+        private const val DEBOUNCE_DELAY = 1000L
     }
 
+    private val handler = Handler(Looper.getMainLooper())
+    private var clickRunnable: Runnable? = null
     fun updateData(newTrackList: List<Track>) {
         trackList.clear()
         trackList.addAll(newTrackList)
@@ -32,15 +37,18 @@ class TrackAdapter(
         val track = trackList[position]
         holder.bind(track)
         holder.itemView.setOnClickListener {
-            val context = holder.itemView.context
-            val intent = Intent(context, AudioPlayer::class.java).apply {
-                putExtra(DATA_TRACK, track)
+            clickRunnable?.let {handler.removeCallbacks(it)}
+            clickRunnable = Runnable {
+                val context = holder.itemView.context
+                val intent = Intent(context, AudioPlayer::class.java).apply {
+                    putExtra(DATA_TRACK, track)
+                }
+                context.startActivity(intent)
+                if (!isSearchHistory) {
+                    searchHistory.saveHistory(track)
+                }
             }
-            context.startActivity(intent)
-            if (!isSearchHistory) {
-                searchHistory.saveHistory(track)
-            }
-
+            handler.postDelayed(clickRunnable!!, DEBOUNCE_DELAY)
         }
     }
 

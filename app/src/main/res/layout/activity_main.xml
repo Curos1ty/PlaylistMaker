@@ -10,12 +10,11 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/main_toolbar"
+        style="@style/ToolbarBase"
         android:layout_width="match_parent"
         android:gravity="center"
         app:title="@string/app_name"
-        app:titleTextColor="@color/white"
-        style="@style/ToolbarBase"
-        />
+        app:titleTextColor="@color/white" />
 
     <Button
         android:id="@+id/search"
