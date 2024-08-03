@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.adapter
 
 import android.view.View
 import android.widget.ImageView
@@ -6,7 +6,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.model.Track
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.model.Track
+import com.example.playlistmaker.toPx
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val cornerRadiusValue = 2

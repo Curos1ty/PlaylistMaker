@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.adapter
 
 import android.content.Intent
 import android.os.Handler
@@ -6,8 +6,11 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.AudioPlayer
 import com.example.playlistmaker.AudioPlayer.Companion.DATA_TRACK
-import com.example.playlistmaker.model.Track
+import com.example.playlistmaker.R
+import com.example.playlistmaker.SearchHistory
+import com.example.playlistmaker.data.model.Track
 
 class TrackAdapter(
     private val trackList: MutableList<Track>,
