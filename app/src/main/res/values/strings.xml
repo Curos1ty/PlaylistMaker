@@ -32,6 +32,9 @@
     <string name="releaseYear">Год</string>
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
+    <string name="unknownReleaseDate">Неизвестная дата релиза</string>
+    <string name="unknownGenre">Неизвестный жанр</string>
+    <string name="unknownCountry">Неизвестная страна</string>
 
 
 </resources>

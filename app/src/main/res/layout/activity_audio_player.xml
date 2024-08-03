@@ -103,7 +103,7 @@
                 app:layout_constraintStart_toEndOf="@id/guideLeftBorder"
                 app:layout_constraintTop_toTopOf="@id/add_to_favourite_button"
                 app:layout_constraintVertical_bias="0.5"
-                tools:src="@drawable/plus"/>
+                tools:src="@drawable/plus" />
 
             <ImageButton
                 android:id="@+id/play_pause_button"

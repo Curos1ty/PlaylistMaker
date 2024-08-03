@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         val buttonMediaLibrary = findViewById<Button>(R.id.media_library)
         val buttonSettings = findViewById<Button>(R.id.settings)
 
-        buttonMediaLibrary.setOnClickListener{
+        buttonMediaLibrary.setOnClickListener {
             val displayIntentMediaLibrary = Intent(this, MediaLibraryActivity::class.java)
             startActivity(displayIntentMediaLibrary)
         }
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
             val displayIntentSearch = Intent(this, SearchActivity::class.java)
             startActivity(displayIntentSearch)
         }
-        buttonSettings.setOnClickListener{
+        buttonSettings.setOnClickListener {
             val displayIntentSettings = Intent(this, SettingsActivity::class.java)
             startActivity(displayIntentSettings)
         }

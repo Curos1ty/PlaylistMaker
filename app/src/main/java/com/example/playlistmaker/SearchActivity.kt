@@ -1,11 +1,11 @@
 package com.example.playlistmaker
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -13,17 +13,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
-
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-
 import com.example.playlistmaker.model.TrackSearchResponse
 import com.example.playlistmaker.network.RetrofitClient
-
-import retrofit2.Callback
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 
@@ -50,12 +49,20 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val SEARCH_TEXT_KEY = "searchText"
+        private const val CLICK_DEBOUNCE_DELAY = 2000L
     }
 
+    private lateinit var handler: Handler
+    private var searchRunnable: Runnable? = null
+
+    private lateinit var searchProgressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+        handler = Handler(Looper.getMainLooper())
+        searchProgressBar = findViewById(R.id.search_progress_bar)
 
         visibilityLinerLayoutHistory = findViewById(R.id.search_history_layout)
 
@@ -107,6 +114,12 @@ class SearchActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 searchText = s.toString()
                 clearButton.isVisible = !s.isNullOrEmpty()
+
+                searchRunnable?.let { handler.removeCallbacks(it) }
+                searchRunnable = Runnable { searchSongs(searchText) }
+                handler.postDelayed(searchRunnable!!, CLICK_DEBOUNCE_DELAY)
+
+
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -150,7 +163,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun searchSongs(query: String) {
         if (query.isNotEmpty()) {
-            //Log.i("Запрос для песен не пустой", query)
+            showProgressBar()
             lastQuery = query
             val call = RetrofitClient.iTunesApiService.searchSongs(query)
 
@@ -158,9 +171,9 @@ class SearchActivity : AppCompatActivity() {
                 override fun onResponse(
                     call: Call<TrackSearchResponse>, response: Response<TrackSearchResponse>
                 ) {
+                    searchProgressBar.visibility = View.GONE
                     if (response.isSuccessful) {
                         val songs = response.body()?.results ?: emptyList()
-                        //Log.i("Проверка Response", songs.toString())
                         if (songs.isEmpty()) {
                             showNoResultsPlaceholder()
                         } else {
@@ -173,6 +186,7 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<TrackSearchResponse>, t: Throwable) {
+                    searchProgressBar.visibility = View.GONE
                     showErrorPlaceholder()
                 }
             })
@@ -189,7 +203,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showResults() {
-        //Log.i("Сюда зашло", recyclerViewSearch.visibility.toString())
         recyclerViewSearch.visibility = View.VISIBLE
         noResultsPlaceholder.visibility = View.GONE
         errorInternetPlaceholder.visibility = View.GONE
@@ -225,6 +238,11 @@ class SearchActivity : AppCompatActivity() {
         visibilityLinerLayoutHistory.visibility = View.GONE
         searchHistory.clearHistory()
         clearSearchResults()
+    }
+
+    private fun showProgressBar() {
+        searchProgressBar.visibility = View.VISIBLE
+        visibilityLinerLayoutHistory.visibility = View.GONE
     }
 }
 
