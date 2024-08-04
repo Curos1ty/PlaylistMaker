@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:theme="@style/ThemeSearchActivity"
-    tools:context=".SearchActivity">
+    tools:context=".presentation.ui.SearchActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/search_toolbar"
@@ -80,7 +80,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/layout_margin_top_24dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/search_history_title"

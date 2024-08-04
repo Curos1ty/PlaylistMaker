@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui
 
 import android.content.Intent
 import android.net.Uri
@@ -6,13 +6,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import com.example.playlistmaker.App
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.interactor.ThemeSettingsInteractor
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
+    private lateinit var themeSettingsInteractor: ThemeSettingsInteractor
     override fun onCreate(saveInstanceState: Bundle?) {
         super.onCreate(saveInstanceState)
         setContentView(R.layout.activity_settings)
+
+        themeSettingsInteractor = Creator.provideThemeSettingsInteractor(applicationContext)
+
         val toolbar = findViewById<Toolbar>(R.id.settings_toolbar)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.switch_setting)
 
@@ -20,11 +28,12 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-        val sharedPreferences = getSharedPreferences("theme_prefs", MODE_PRIVATE)
-        val isDarkTheme = sharedPreferences.getBoolean("dark_theme", false)
+        val isDarkTheme = themeSettingsInteractor.isDarkThemeEnabled()
         themeSwitcher.isChecked = isDarkTheme
 
+
         themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
+            themeSettingsInteractor.setDarkThemeEnabled(isChecked)
             (applicationContext as App).switchTheme(isChecked)
         }
 
