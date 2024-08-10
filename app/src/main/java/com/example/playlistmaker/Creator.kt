@@ -27,13 +27,16 @@ object Creator {
         return RetrofitClient.iTunesApiService
     }
 
-    private fun provideTrackRepository(): TrackRepository {
-        return TrackRepositoryImpl(provideITunesApi())
+    private fun provideSearchHistory(context: Context): SearchHistory {
+        return SearchHistory(context)
+    }
+
+    private fun provideTrackRepository(context: Context): TrackRepository {
+        return TrackRepositoryImpl(provideITunesApi(), provideSearchHistory(context))
     }
 
     fun provideTrackInteractor(context: Context): TrackInteractor {
-        val repository = provideTrackRepository()
-        val searchHistory = SearchHistory(context)
-        return TrackInteractorImpl(repository, searchHistory)
+        val repository = provideTrackRepository(context)
+        return TrackInteractorImpl(repository)
     }
 }

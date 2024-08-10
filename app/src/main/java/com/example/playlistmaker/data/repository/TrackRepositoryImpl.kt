@@ -1,37 +1,43 @@
 package com.example.playlistmaker.data.repository
 
+import com.example.playlistmaker.data.SearchHistory
 import com.example.playlistmaker.data.TrackCreator
-import com.example.playlistmaker.data.model.TrackDto
-import com.example.playlistmaker.data.model.TrackSearchResponse
 import com.example.playlistmaker.data.network.ITunesApi
-import com.example.playlistmaker.data.network.RetrofitClient
 import com.example.playlistmaker.domain.model.Track
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class TrackRepositoryImpl(
-    private val api: ITunesApi
+    private val api: ITunesApi,
+    private val searchHistory: SearchHistory
 ) : TrackRepository {
 
-    override fun searchSongs(query: String, callback: (List<Track>) -> Unit) {
-        api.searchSongs(query).enqueue(object : Callback<TrackSearchResponse> {
-            override fun onResponse(
-                call: Call<TrackSearchResponse>,
-                response: Response<TrackSearchResponse>
-            ) {
+    override suspend fun searchSongs(query: String): List<Track> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = api.searchSongs(query).execute()
                 if (response.isSuccessful) {
                     val trackDtos = response.body()?.results ?: emptyList()
-                    val tracks = trackDtos.map { TrackCreator.map(it) }
-                    callback(tracks)
+                    trackDtos.map { TrackCreator.map(it) }
                 } else {
-                    callback(emptyList())
+                    emptyList()
                 }
+            } catch (e: Exception) {
+                emptyList()
             }
+        }
+    }
 
-            override fun onFailure(call: Call<TrackSearchResponse>, t: Throwable) {
-                callback(emptyList())
-            }
-        })
+    override fun saveTrack(track: Track) {
+        searchHistory.saveHistory(track)
+    }
+
+    override fun getTrackHistory(): List<Track> {
+        val trackDtos = searchHistory.getHistory()
+        return trackDtos.map { TrackCreator.map(it) }
+    }
+
+    override fun clearHistory() {
+        searchHistory.clearHistory()
     }
 }

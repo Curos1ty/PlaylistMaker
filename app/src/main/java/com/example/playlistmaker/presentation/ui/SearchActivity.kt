@@ -7,11 +7,13 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.data.TrackCreator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
@@ -19,6 +21,7 @@ import com.example.playlistmaker.domain.interactor.TrackInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.adapter.TrackAdapter
 import com.example.playlistmaker.presentation.ui.AudioPlayer.Companion.DATA_TRACK
+import kotlinx.coroutines.launch
 
 
 class SearchActivity : AppCompatActivity() {
@@ -149,7 +152,8 @@ class SearchActivity : AppCompatActivity() {
         if (query.isNotEmpty()) {
             showProgressBar()
             try {
-                trackInteractor.searchSongs(query) { songs ->
+                lifecycleScope.launch {
+                    val songs = trackInteractor.searchSongs(query)
                     binding.searchProgressBar.visibility = View.GONE
                     if (songs.isEmpty()) {
                         showNoResultsPlaceholder()
@@ -167,6 +171,7 @@ class SearchActivity : AppCompatActivity() {
             loadSearchHistory()
         }
     }
+
 
     private fun clearSearchResults() {
         trackAdapter.updateData(emptyList())

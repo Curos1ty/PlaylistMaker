@@ -107,11 +107,11 @@
 
             <ImageButton
                 android:id="@+id/play_pause_button"
+                style="@style/playPauseButton"
                 android:layout_width="83.33dp"
                 android:layout_height="83.33dp"
                 android:layout_marginTop="30dp"
                 android:contentDescription="@string/play_pause"
-                app:backgroundTint="?attr/colorPrimaryDark"
                 app:layout_constraintEnd_toStartOf="@id/add_to_favourite_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@id/add_to_playlist_button"

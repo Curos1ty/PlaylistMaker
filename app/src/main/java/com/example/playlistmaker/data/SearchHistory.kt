@@ -3,6 +3,7 @@ package com.example.playlistmaker.data
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.playlistmaker.data.model.TrackDto
+import com.example.playlistmaker.domain.model.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -17,10 +18,11 @@ class SearchHistory(private val context: Context) {
         context.getSharedPreferences(SEARCH_PREFS_NAME, Context.MODE_PRIVATE)
     }
 
-    fun saveHistory(newTrack: TrackDto) {
-        val historyList = getHistory()
+    fun saveHistory(newTrack: Track) {
+        val trackDto = TrackCreator.map(newTrack)
+        val historyList = getHistory().toMutableList()
         historyList.removeAll { it.trackId == newTrack.trackId }
-        historyList.add(0, newTrack)
+        historyList.add(0, trackDto)
         if (historyList.size > MAX_HISTORY_SIZE) {
             historyList.removeAt(historyList.size - 1)
         }
@@ -28,12 +30,12 @@ class SearchHistory(private val context: Context) {
         sharedPreferences.edit().putString(SEARCH_TEXT_KEY, historyJson).apply()
     }
 
-    fun getHistory(): MutableList<TrackDto> {
+    fun getHistory(): List<TrackDto> {
         val historyJson = sharedPreferences.getString(SEARCH_TEXT_KEY, null)
         return if (historyJson != null) {
             try {
                 val historyType = object : TypeToken<MutableList<TrackDto>>() {}.type
-                Gson().fromJson(historyJson, historyType)
+                Gson().fromJson<MutableList<TrackDto>>(historyJson, historyType).toList()
             } catch (e: Exception) {
                 mutableListOf()
             }
