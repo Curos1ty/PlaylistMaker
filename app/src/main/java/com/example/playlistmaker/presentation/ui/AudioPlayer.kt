@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui
 
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -11,7 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.model.Track
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.TrackCreator
+import com.example.playlistmaker.data.model.TrackDto
+import com.example.playlistmaker.toPx
 
 class AudioPlayer : AppCompatActivity() {
     private lateinit var albumArtImageView: ImageView
@@ -89,9 +92,10 @@ class AudioPlayer : AppCompatActivity() {
             finish()
         }
 
-        val track: Track? = intent.getParcelableExtra(DATA_TRACK)
+        val track: TrackDto? = intent.getParcelableExtra(DATA_TRACK)
 
         track?.let {
+            TrackCreator.map(it)
             setupTrackDetails(it)
             preparePlayer(it.previewUrl)
         }
@@ -126,7 +130,7 @@ class AudioPlayer : AppCompatActivity() {
 
     }
 
-    private fun setupTrackDetails(track: Track) {
+    private fun setupTrackDetails(track: TrackDto) {
         trackNameTextView.text = track.trackName
         artistNameTextView.text = track.artistName
         if (track.collectionName != null) {
@@ -169,6 +173,7 @@ class AudioPlayer : AppCompatActivity() {
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             playerState = STATE_PREPARED
+            updateTimeRunnable?.let { handler.post(it) }
         }
         mediaPlayer.setOnCompletionListener {
             playerState = STATE_PREPARED

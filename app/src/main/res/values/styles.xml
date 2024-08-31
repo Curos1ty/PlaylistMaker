@@ -143,5 +143,8 @@
         <item name="android:layout_height">@dimen/size_button_player_51dp</item>
     </style>
 
+    <style name="playPauseButton">
+        <item name="backgroundTint">@color/white</item>
+    </style>
 
 </resources>
