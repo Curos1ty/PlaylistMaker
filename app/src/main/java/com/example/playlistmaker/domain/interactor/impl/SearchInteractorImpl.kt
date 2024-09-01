@@ -1,11 +1,12 @@
-package com.example.playlistmaker.domain.interactor
+package com.example.playlistmaker.domain.interactor.impl
 
 import com.example.playlistmaker.data.repository.TrackRepository
+import com.example.playlistmaker.domain.interactor.SearchInteractor
 import com.example.playlistmaker.domain.model.Track
 
-class TrackInteractorImpl(
+class SearchInteractorImpl(
     private val repository: TrackRepository
-) : TrackInteractor {
+) : SearchInteractor {
     override suspend fun searchSongs(query: String): List<Track> {
         return repository.searchSongs(query)
     }
@@ -21,5 +22,4 @@ class TrackInteractorImpl(
     override fun clearSearchHistory() {
         repository.clearHistory()
     }
-
 }

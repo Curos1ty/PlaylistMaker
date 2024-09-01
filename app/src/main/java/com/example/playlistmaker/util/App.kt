@@ -1,12 +1,16 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.util
 
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 
-class App: Application() {
+class App : Application() {
     override fun onCreate() {
         super.onCreate()
+        applySavedTheme()
+    }
+
+    private fun applySavedTheme() {
         val sharedPreferences = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
         val isDarkTheme = sharedPreferences.getBoolean("dark_theme", false)
         AppCompatDelegate.setDefaultNightMode(
@@ -20,7 +24,7 @@ class App: Application() {
 
     fun switchTheme(darkThemeEnabled: Boolean) {
         val sharedPreferences = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
-        with (sharedPreferences.edit()) {
+        with(sharedPreferences.edit()) {
             putBoolean("dark_theme", darkThemeEnabled)
             apply()
         }
