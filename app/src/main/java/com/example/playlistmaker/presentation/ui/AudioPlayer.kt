@@ -17,21 +17,16 @@ import com.example.playlistmaker.util.toPx
 class AudioPlayer : AppCompatActivity() {
 
     private lateinit var binding: ActivityAudioPlayerBinding
-    private lateinit var viewModel: AudioPlayerViewModel
-
-    companion object {
-        const val DATA_TRACK = "trackData"
-        const val TRACK_DURATION = "00:00"
-        const val RADIUS = 8
-    }
+    private lateinit var audioPlayerViewModel: AudioPlayerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this, AudioPlayerViewModel.getViewModelFactory(this))
-            .get(AudioPlayerViewModel::class.java)
+        audioPlayerViewModel =
+            ViewModelProvider(this, AudioPlayerViewModel.getViewModelFactory(this))
+                .get(AudioPlayerViewModel::class.java)
 
         val toolbar = binding.audioPlayerToolbar as Toolbar
         toolbar.setNavigationOnClickListener {
@@ -42,14 +37,14 @@ class AudioPlayer : AppCompatActivity() {
         track?.let {
             val trackDomainModel = TrackCreator.map(it)
             setupTrackDetails(it)
-            viewModel.preparePlayer(it.previewUrl, trackDomainModel)
+            audioPlayerViewModel.preparePlayer(it.previewUrl, trackDomainModel)
         }
 
         binding.playPauseButton.setOnClickListener {
-            viewModel.playbackControl()
+            audioPlayerViewModel.playbackControl()
         }
 
-        viewModel.isPlaying.observe(this) { isPlaying ->
+        audioPlayerViewModel.isPlaying.observe(this) { isPlaying ->
             if (isPlaying) {
                 binding.playPauseButton.setImageResource(R.drawable.pause)
             } else {
@@ -57,15 +52,15 @@ class AudioPlayer : AppCompatActivity() {
             }
         }
 
-        viewModel.trackDuration.observe(this) { duration ->
+        audioPlayerViewModel.trackDuration.observe(this) { duration ->
             binding.playerTrackDuration.text = duration
         }
 
-        viewModel.playerState.observe(this) { state ->
+        audioPlayerViewModel.playerState.observe(this) { state ->
             if (state == AudioPlayerViewModel.STATE_PREPARED) {
-                viewModel.startUpdatingTime()
+                audioPlayerViewModel.startUpdatingTime()
             } else if (state == AudioPlayerViewModel.STATE_PLAYING) {
-                viewModel.startUpdatingTime()
+                audioPlayerViewModel.startUpdatingTime()
             }
 
         }
@@ -77,9 +72,9 @@ class AudioPlayer : AppCompatActivity() {
 
 
         binding.addToFavoriteButton.setOnClickListener {
-            viewModel.toggleFavorite()
+            audioPlayerViewModel.toggleFavorite()
         }
-        viewModel.isFavorite.observe(this) { isFavorite ->
+        audioPlayerViewModel.isFavorite.observe(this) { isFavorite ->
             binding.addToFavoriteButton.setImageResource(
                 if (isFavorite) R.drawable.favourites_ok else R.drawable.favourites
             )
@@ -87,11 +82,11 @@ class AudioPlayer : AppCompatActivity() {
         }
 
         binding.addToPlaylistButton.setOnClickListener {
-            viewModel.togglePlaylist()
+            audioPlayerViewModel.togglePlaylist()
         }
 
 
-        viewModel.isInPlaylist.observe(this) { isInPlaylist ->
+        audioPlayerViewModel.isInPlaylist.observe(this) { isInPlaylist ->
             binding.addToPlaylistButton.setImageResource(
                 if (isInPlaylist) R.drawable.plus_ok else R.drawable.plus
             )
@@ -101,12 +96,12 @@ class AudioPlayer : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.pauseAudio()
+        audioPlayerViewModel.pauseAudio()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.releasePlayer()
+        audioPlayerViewModel.releasePlayer()
     }
 
     private fun setupTrackDetails(track: TrackDto) {
@@ -125,5 +120,11 @@ class AudioPlayer : AppCompatActivity() {
             .placeholder(R.drawable.placeholder_album_player)
             .transform(RoundedCorners(this.toPx(RADIUS).toInt()))
             .into(binding.albumArt)
+    }
+
+    companion object {
+        const val DATA_TRACK = "trackData"
+        const val TRACK_DURATION = "00:00"
+        const val RADIUS = 8
     }
 }

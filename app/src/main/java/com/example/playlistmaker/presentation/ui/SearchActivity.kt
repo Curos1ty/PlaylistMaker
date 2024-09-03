@@ -24,13 +24,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var searchHistoryAdapter: TrackAdapter
-    private lateinit var viewModel: SearchViewModel
+    private lateinit var searchViewModel: SearchViewModel
 
     private var searchText: String = ""
-
-    companion object {
-        private const val SEARCH_TEXT_KEY = "searchText"
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +34,7 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(
+        searchViewModel = ViewModelProvider(
             this,
             SearchViewModel.getViewModelFactory(this)
         ).get(SearchViewModel::class.java)
@@ -54,16 +50,16 @@ class SearchActivity : AppCompatActivity() {
         binding.searchHistoryRecyclerView.adapter = searchHistoryAdapter
 
 
-        viewModel.tracks.observe(this) { tracks ->
+        searchViewModel.tracks.observe(this) { tracks ->
             if (tracks.isNotEmpty()) {
                 trackAdapter.updateData(tracks)
-                binding.searchRecyclerViewItunes.visibility = View.VISIBLE
-                binding.searchHistoryLayout.visibility = View.GONE
+                binding.searchRecyclerViewItunes.isVisible = true
+                binding.searchHistoryLayout.isVisible = false
             }
         }
 
 
-        viewModel.searchHistory.observe(this) { history ->
+        searchViewModel.searchHistory.observe(this) { history ->
             if (history.isNotEmpty()) {
                 searchHistoryAdapter.updateData(history)
                 binding.searchHistoryLayout.visibility = View.VISIBLE
@@ -71,23 +67,23 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.showProgressBar.observe(this) { show ->
+        searchViewModel.showProgressBar.observe(this) { show ->
             binding.searchProgressBar.visibility = if (show) View.VISIBLE else View.GONE
             binding.searchHistoryLayout.visibility = View.GONE
         }
 
-        viewModel.showNoResultsPlaceholder.observe(this) { show ->
+        searchViewModel.showNoResultsPlaceholder.observe(this) { show ->
             binding.noResultsPlaceholder.visibility = if (show) View.VISIBLE else View.GONE
         }
 
-        viewModel.showErrorPlaceholder.observe(this) { show ->
+        searchViewModel.showErrorPlaceholder.observe(this) { show ->
             binding.connectionErrorPlaceholder.visibility = if (show) View.VISIBLE else View.GONE
         }
 
         binding.inputEditTextSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 searchText = s.toString()
-                viewModel.onSearchTextChanged(searchText)
+                searchViewModel.onSearchTextChanged(searchText)
                 binding.clearSearchButtonIcon.isVisible = !s.isNullOrEmpty()
             }
 
@@ -105,14 +101,14 @@ class SearchActivity : AppCompatActivity() {
             binding.searchHint.visibility =
                 if (hasFocus && binding.inputEditTextSearch.text.isNullOrEmpty()) View.VISIBLE else View.GONE
             if (hasFocus && searchText.isEmpty()) {
-                viewModel.loadSearchHistory()
+                searchViewModel.loadSearchHistory()
             }
         }
 
         binding.inputEditTextSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val query = binding.inputEditTextSearch.text.toString()
-                viewModel.onSearchTextChanged(query)
+                searchViewModel.onSearchTextChanged(query)
                 true
             } else {
                 false
@@ -127,7 +123,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.clearHistoryButton.setOnClickListener {
-            viewModel.clearSearchHistory()
+            searchViewModel.clearSearchHistory()
         }
 
         binding.searchToolbar.setNavigationOnClickListener {
@@ -165,7 +161,11 @@ class SearchActivity : AppCompatActivity() {
             putExtra(DATA_TRACK, trackDto)
         }
         context.startActivity(intent)
-        viewModel.saveTrack(track)
+        searchViewModel.saveTrack(track)
+    }
+
+    companion object {
+        private const val SEARCH_TEXT_KEY = "searchText"
     }
 }
 

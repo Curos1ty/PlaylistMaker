@@ -16,19 +16,6 @@ import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.util.TimeUtils
 
 class AudioPlayerViewModel(private val interactor: FavoritesInteractor) : ViewModel() {
-    companion object {
-        const val STATE_DEFAULT = 0
-        const val STATE_PREPARED = 1
-        const val STATE_PLAYING = 2
-        const val STATE_PAUSED = 3
-
-        fun getViewModelFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val favoritesInteractor = Creator.provideFavoritesInteractor(context)
-                AudioPlayerViewModel(favoritesInteractor)
-            }
-        }
-    }
 
     private val _trackDuration = MutableLiveData<String>()
     val trackDuration: LiveData<String> = _trackDuration
@@ -123,6 +110,20 @@ class AudioPlayerViewModel(private val interactor: FavoritesInteractor) : ViewMo
 
     fun togglePlaylist() {
         _isInPlaylist.value = _isInPlaylist.value?.not()
+    }
+
+    companion object {
+        const val STATE_DEFAULT = 0
+        const val STATE_PREPARED = 1
+        const val STATE_PLAYING = 2
+        const val STATE_PAUSED = 3
+
+        fun getViewModelFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val favoritesInteractor = Creator.provideFavoritesInteractor(context)
+                AudioPlayerViewModel(favoritesInteractor)
+            }
+        }
     }
 
 }
