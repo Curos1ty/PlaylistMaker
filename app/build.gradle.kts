@@ -59,4 +59,5 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
     implementation("androidx.activity:activity-ktx:1.7.2")
     implementation("androidx.fragment:fragment-ktx:1.8.2")
+    implementation("io.insert-koin:koin-android:3.5.6")
 }

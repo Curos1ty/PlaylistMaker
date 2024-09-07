@@ -1,16 +1,11 @@
 package com.example.playlistmaker.presentation.ui.search
 
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.data.creator.Creator
 import com.example.playlistmaker.domain.interactor.SearchInteractor
 import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.launch
@@ -92,14 +87,5 @@ class SearchViewModel(
 
     fun saveTrack(track: Track) {
         searchInteractor.saveSearchHistory(track)
-    }
-
-    companion object {
-        fun getViewModelFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val interactor = Creator.provideTrackInteractor(context)
-                SearchViewModel(interactor)
-            }
-        }
     }
 }
