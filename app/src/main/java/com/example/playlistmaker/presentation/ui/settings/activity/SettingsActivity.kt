@@ -1,7 +1,6 @@
 package com.example.playlistmaker.presentation.ui.settings.activity
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.playlistmaker.R
@@ -9,14 +8,14 @@ import com.example.playlistmaker.presentation.ui.settings.view_model.SettingsVie
 import com.example.playlistmaker.util.App
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
-    private val settingsViewModel: SettingsViewModel by viewModels {
-        SettingsViewModel.getViewModelFactory(applicationContext)
-    }
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_settings)
 
         val toolbar = findViewById<Toolbar>(R.id.settings_toolbar)

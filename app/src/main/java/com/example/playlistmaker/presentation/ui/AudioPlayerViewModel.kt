@@ -1,16 +1,11 @@
 package com.example.playlistmaker.presentation.ui
 
-import android.content.Context
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.data.creator.Creator
 import com.example.playlistmaker.domain.interactor.FavoritesInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.util.TimeUtils
@@ -117,13 +112,6 @@ class AudioPlayerViewModel(private val interactor: FavoritesInteractor) : ViewMo
         const val STATE_PREPARED = 1
         const val STATE_PLAYING = 2
         const val STATE_PAUSED = 3
-
-        fun getViewModelFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val favoritesInteractor = Creator.provideFavoritesInteractor(context)
-                AudioPlayerViewModel(favoritesInteractor)
-            }
-        }
     }
 
 }
