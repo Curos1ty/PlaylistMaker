@@ -35,6 +35,10 @@
     <string name="unknownReleaseDate">Неизвестная дата релиза</string>
     <string name="unknownGenre">Неизвестный жанр</string>
     <string name="unknownCountry">Неизвестная страна</string>
-
-
+    <string name="no_tracks_message">Ваша медиатека пуста</string>
+    <string name="no_playlists_message">Вы не создали\nни одного плейлиста</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <string name="favorites_tracks">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
+    <string name="empty">Пусто</string>
 </resources>

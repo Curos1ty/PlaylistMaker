@@ -60,4 +60,5 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.7.2")
     implementation("androidx.fragment:fragment-ktx:1.8.2")
     implementation("io.insert-koin:koin-android:3.5.6")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
 }

@@ -10,7 +10,7 @@ class ThemeSettingsRepositoryImpl(
         return sharedPreferences.getBoolean("dark_theme", false)
     }
 
-    override fun updateThemeSettings(settings: Boolean) {
-        sharedPreferences.edit().putBoolean("dark_theme", settings).apply()
+    override fun updateThemeSettings(isDarkTheme: Boolean) {
+        sharedPreferences.edit().putBoolean("dark_theme", isDarkTheme).apply()
     }
 }
