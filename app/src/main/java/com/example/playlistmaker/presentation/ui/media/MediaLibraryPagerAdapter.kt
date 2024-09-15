@@ -14,9 +14,8 @@ class MediaLibraryPagerAdapter(fragmentManager: FragmentManager, lifecycle: Life
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> FavoritesTracksFragment()
-            1 -> PlaylistsFragment()
-            else -> throw IllegalStateException("Неизвестная позиция $position")
+            0 -> FavoritesTracksFragment.newInstance()
+            else -> PlaylistsFragment.newInstance()
         }
     }
 }

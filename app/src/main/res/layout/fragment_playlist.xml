@@ -7,9 +7,9 @@
 
     <Button
         android:id="@+id/create_playlist_button"
+        style="@style/imageRetrySearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/imageRetrySearch"
         android:layout_gravity="center"
         android:text="@string/new_playlist"
         android:visibility="visible" />
@@ -17,18 +17,17 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="46dp"
-        android:src="@drawable/empty_search"
-        android:contentDescription="@string/empty"
         android:layout_gravity="center"
-        />
+        android:layout_marginTop="46dp"
+        android:contentDescription="@string/empty"
+        android:src="@drawable/empty_search" />
 
     <TextView
+        android:id="@+id/empty_text"
+        style="@style/textEmptySearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/textEmptySearch"
+        android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:text="@string/no_playlists_message"
-        android:textAppearance="?attr/textAppearanceBody1"
-        android:layout_gravity="center"/>
+        android:textAppearance="?attr/textAppearanceBody1" />
 </LinearLayout>

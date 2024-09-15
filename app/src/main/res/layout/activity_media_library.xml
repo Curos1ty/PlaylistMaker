@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:theme="@style/ThemeSearchActivity"
+    android:theme="@style/ThemeMediaLibraryActivity"
     tools:context=".presentation.ui.MediaLibraryActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -20,12 +20,11 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorSecondary"
-        app:tabIndicatorColor="?attr/colorSecondary"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/Widget.Design.TabLayout"
+        app:tabIndicatorColor="?attr/colorPrimaryDark"
         app:tabIndicatorFullWidth="true"
-        app:tabTextColor="?attr/colorSecondary"
-        app:tabIndicatorHeight="6dp"
-        />
+        app:tabTextColor="?attr/colorSecondary" />
 
 
     <androidx.viewpager2.widget.ViewPager2
