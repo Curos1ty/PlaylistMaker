@@ -128,6 +128,8 @@ class SearchFragment: Fragment() {
 
         binding.clearHistoryButton.setOnClickListener {
             searchViewModel.clearSearchHistory()
+            searchHistoryAdapter.updateData(emptyList())
+            binding.searchHistoryLayout.visibility = View.GONE
         }
 
         if (savedInstanceState != null) {
