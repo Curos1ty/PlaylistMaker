@@ -7,13 +7,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:theme="@style/ThemeMediaLibraryActivity"
-    tools:context=".presentation.ui.MediaLibraryActivity">
+    tools:context=".presentation.ui.media.MediaLibraryFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/media_library_toolbar"
         style="@style/ToolbarBase"
         android:layout_width="match_parent"
-        app:navigationIcon="@drawable/image_back_arrow"
+        android:contentDescription="@string/text_media_library"
         app:title="@string/text_media_library" />
 
     <com.google.android.material.tabs.TabLayout
@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
+        android:contentDescription="@string/tablayout"
         android:theme="@style/Widget.Design.TabLayout"
         app:tabIndicatorColor="?attr/colorPrimaryDark"
         app:tabIndicatorFullWidth="true"

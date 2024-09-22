@@ -85,6 +85,9 @@ class SearchViewModel(
         _searchHistory.value = emptyList()
     }
 
+    fun clearTracks() {
+        _tracks.value = emptyList()
+    }
     fun saveTrack(track: Track) {
         searchInteractor.saveSearchHistory(track)
     }

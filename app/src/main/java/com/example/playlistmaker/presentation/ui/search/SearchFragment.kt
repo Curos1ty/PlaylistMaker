@@ -1,38 +1,45 @@
-package com.example.playlistmaker.presentation.ui
+package com.example.playlistmaker.presentation.ui.search
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.example.playlistmaker.data.TrackCreator
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.adapter.TrackAdapter
-import com.example.playlistmaker.presentation.ui.AudioPlayer.Companion.DATA_TRACK
-import com.example.playlistmaker.presentation.ui.search.SearchViewModel
+import com.example.playlistmaker.presentation.ui.AudioPlayer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+class SearchFragment: Fragment() {
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
 
-class SearchActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivitySearchBinding
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var searchHistoryAdapter: TrackAdapter
     private val searchViewModel: SearchViewModel by viewModel()
 
     private var searchText: String = ""
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         trackAdapter = TrackAdapter(mutableListOf()) { track ->
             handleTrackClick(track)
@@ -45,7 +52,7 @@ class SearchActivity : AppCompatActivity() {
         binding.searchHistoryRecyclerView.adapter = searchHistoryAdapter
 
 
-        searchViewModel.tracks.observe(this) { tracks ->
+        searchViewModel.tracks.observe(viewLifecycleOwner) { tracks ->
             if (tracks.isNotEmpty()) {
                 trackAdapter.updateData(tracks)
                 binding.searchRecyclerViewItunes.isVisible = true
@@ -54,24 +61,24 @@ class SearchActivity : AppCompatActivity() {
         }
 
 
-        searchViewModel.searchHistory.observe(this) { history ->
-            if (history.isNotEmpty()) {
+        searchViewModel.searchHistory.observe(viewLifecycleOwner) { history ->
+            if (history.isNotEmpty() && binding.inputEditTextSearch.hasFocus()) {
                 searchHistoryAdapter.updateData(history)
                 binding.searchHistoryLayout.visibility = View.VISIBLE
                 binding.searchRecyclerViewItunes.visibility = View.GONE
             }
         }
 
-        searchViewModel.showProgressBar.observe(this) { show ->
+        searchViewModel.showProgressBar.observe(viewLifecycleOwner) { show ->
             binding.searchProgressBar.visibility = if (show) View.VISIBLE else View.GONE
             binding.searchHistoryLayout.visibility = View.GONE
         }
 
-        searchViewModel.showNoResultsPlaceholder.observe(this) { show ->
+        searchViewModel.showNoResultsPlaceholder.observe(viewLifecycleOwner) { show ->
             binding.noResultsPlaceholder.visibility = if (show) View.VISIBLE else View.GONE
         }
 
-        searchViewModel.showErrorPlaceholder.observe(this) { show ->
+        searchViewModel.showErrorPlaceholder.observe(viewLifecycleOwner) { show ->
             binding.connectionErrorPlaceholder.visibility = if (show) View.VISIBLE else View.GONE
         }
 
@@ -97,6 +104,8 @@ class SearchActivity : AppCompatActivity() {
                 if (hasFocus && binding.inputEditTextSearch.text.isNullOrEmpty()) View.VISIBLE else View.GONE
             if (hasFocus && searchText.isEmpty()) {
                 searchViewModel.loadSearchHistory()
+            } else {
+                clearSearchResults()
             }
         }
 
@@ -119,10 +128,8 @@ class SearchActivity : AppCompatActivity() {
 
         binding.clearHistoryButton.setOnClickListener {
             searchViewModel.clearSearchHistory()
-        }
-
-        binding.searchToolbar.setNavigationOnClickListener {
-            finish()
+            searchHistoryAdapter.updateData(emptyList())
+            binding.searchHistoryLayout.visibility = View.GONE
         }
 
         if (savedInstanceState != null) {
@@ -136,11 +143,6 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(SEARCH_TEXT_KEY, searchText)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        searchText = savedInstanceState.getString(SEARCH_TEXT_KEY, "") ?: ""
-    }
-
     private fun clearSearchResults() {
         trackAdapter.updateData(emptyList())
         binding.searchHistoryLayout.visibility = View.GONE
@@ -150,13 +152,25 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun handleTrackClick(track: Track) {
-        val context = this
         val trackDto = TrackCreator.map(track)
-        val intent = Intent(context, AudioPlayer::class.java).apply {
-            putExtra(DATA_TRACK, trackDto)
+        val intent = Intent(requireContext(), AudioPlayer::class.java).apply {
+            putExtra(AudioPlayer.DATA_TRACK, trackDto)
         }
-        context.startActivity(intent)
+        startActivity(intent)
         searchViewModel.saveTrack(track)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (binding.inputEditTextSearch.text.isNullOrEmpty()) {
+            clearSearchResults()
+            searchViewModel.clearTracks()
+        }
     }
 
     companion object {
@@ -166,5 +180,5 @@ class SearchActivity : AppCompatActivity() {
 
 fun View.hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.hideSoftInputFromWindow(windowToken, 0)
+    imm.hideSoftInputFromWindow(windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 }
