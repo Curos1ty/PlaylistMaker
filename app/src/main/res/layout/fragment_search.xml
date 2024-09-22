@@ -7,13 +7,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:theme="@style/ThemeSearchActivity"
-    tools:context=".presentation.ui.SearchActivity">
+    tools:context=".presentation.ui.search.SearchFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/search_toolbar"
         style="@style/ToolbarBase"
         android:layout_width="match_parent"
-        app:navigationIcon="@drawable/image_back_arrow"
         app:title="@string/text_search" />
 
     <FrameLayout
@@ -96,16 +95,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:layoutManager="LinearLayoutManager"
-                tools:listitem="@layout/item_track"
-                />
+                tools:listitem="@layout/item_track" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/clear_history_button"
                 style="@style/imageRetrySearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30dp"
                 android:text="@string/clear_history" />
         </LinearLayout>
     </ScrollView>
@@ -115,9 +113,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:visibility="gone"
         app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/item_track"
-        android:visibility="gone" />
+        tools:listitem="@layout/item_track" />
 
     <LinearLayout
         android:id="@+id/no_results_placeholder"
@@ -171,9 +169,5 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/refresh" />
-
-
     </LinearLayout>
-
-
 </LinearLayout>

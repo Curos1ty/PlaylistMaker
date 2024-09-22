@@ -10,4 +10,6 @@
     <color name="switch_black_theme_back">#9FBBF3</color>
     <color name="ic_clear_cancel">#1A1B22</color>
     <color name="black_background">#1A1B22</color>
+    <color name="inactive_color">#FFFFFFFF</color>
+    <color name="gray_for_line_bot_nav">#E6E8EB</color>
 </resources>

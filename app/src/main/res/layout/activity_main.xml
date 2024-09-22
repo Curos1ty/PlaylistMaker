@@ -1,51 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:theme="@style/Base.Theme.PlaylistMaker"
     tools:context=".presentation.ui.MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/main_toolbar"
-        style="@style/ToolbarBase"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/nav_graph" />
+
+    <View
         android:layout_width="match_parent"
-        android:gravity="center"
-        app:title="@string/app_name"
-        app:titleTextColor="@color/white" />
+        android:layout_height="0.5dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/gray_for_line_bot_nav"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/search"
-        style="@style/ButtonStyleMain"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_0dp"
-        android:layout_marginTop="@dimen/layout_margin_top_24dp"
-        android:layout_weight="1"
-        android:text="@string/text_search"
-        app:icon="@drawable/search" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:itemBackground="@android:color/transparent"
+        app:itemIconTint="@color/bottom_nav_color_selector"
+        app:itemTextColor="@color/bottom_nav_color_selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
-    <Button
-        android:id="@+id/media_library"
-        style="@style/ButtonStyleMain"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_0dp"
-        android:layout_weight="1"
-        android:text="@string/text_media_library"
-        app:icon="@drawable/media_library"
-
-        />
-
-    <Button
-        android:id="@+id/settings"
-        style="@style/ButtonStyleMain"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_0dp"
-        android:layout_weight="1"
-        android:text="@string/text_settings"
-        app:icon="@drawable/settings" />
-
-</LinearLayout>
-
-
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".util.App"
@@ -21,20 +21,11 @@
             android:name=".presentation.ui.AudioPlayer"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.SearchActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.ui.MediaLibraryActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.ui.settings.activity.SettingsActivity"
-            android:exported="false" />
-        <activity
             android:name=".presentation.ui.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
