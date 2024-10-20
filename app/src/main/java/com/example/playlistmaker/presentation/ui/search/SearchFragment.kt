@@ -19,7 +19,7 @@ import com.example.playlistmaker.presentation.adapter.TrackAdapter
 import com.example.playlistmaker.presentation.ui.AudioPlayer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment: Fragment() {
+class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
@@ -167,9 +167,11 @@ class SearchFragment: Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         if (binding.inputEditTextSearch.text.isNullOrEmpty()) {
             clearSearchResults()
             searchViewModel.clearTracks()
+            searchViewModel.loadSearchHistory()
         }
     }
 

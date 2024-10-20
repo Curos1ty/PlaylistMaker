@@ -1,14 +1,17 @@
 package com.example.playlistmaker.presentation.ui
 
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.interactor.FavoritesInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.util.TimeUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class AudioPlayerViewModel(private val interactor: FavoritesInteractor) : ViewModel() {
 
@@ -30,10 +33,8 @@ class AudioPlayerViewModel(private val interactor: FavoritesInteractor) : ViewMo
     private lateinit var currentTrack: Track
 
     private var mediaPlayer: MediaPlayer? = MediaPlayer()
-    private val handler = Handler(Looper.getMainLooper())
-    private var updateTimeRunnable: Runnable? = null
 
-
+    private var updateJob: Job? = null
     fun preparePlayer(url: String, track: Track) {
         currentTrack = track
         _isFavorite.value = interactor.isTrackFavorite(track.trackId)
@@ -76,21 +77,18 @@ class AudioPlayerViewModel(private val interactor: FavoritesInteractor) : ViewMo
     }
 
     fun startUpdatingTime() {
-        updateTimeRunnable = object : Runnable {
-            override fun run() {
-                mediaPlayer?.let {
-                    if (it.isPlaying) {
-                        _trackDuration.value = TimeUtils.formatTime(it.currentPosition.toLong())
-                        handler.postDelayed(this, 500)
-                    }
-                }
+        updateJob?.cancel()
+        updateJob = viewModelScope.launch(Dispatchers.Main) {
+            while (mediaPlayer?.isPlaying == true) {
+                _trackDuration.value =
+                    TimeUtils.formatTime(mediaPlayer?.currentPosition?.toLong() ?: 0L)
+                delay(300L)
             }
         }
-        handler.post(updateTimeRunnable!!)
     }
 
-    private fun stopUpdatingTime() {
-        updateTimeRunnable?.let { handler.removeCallbacks(it) }
+    fun stopUpdatingTime() {
+        updateJob?.cancel()
     }
 
     fun toggleFavorite() {

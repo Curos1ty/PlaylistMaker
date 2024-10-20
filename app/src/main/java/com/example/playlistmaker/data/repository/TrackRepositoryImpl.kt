@@ -5,28 +5,25 @@ import com.example.playlistmaker.data.TrackCreator
 import com.example.playlistmaker.data.network.ITunesApi
 import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class TrackRepositoryImpl(
     private val api: ITunesApi,
     private val searchHistory: SearchHistory
 ) : TrackRepository {
 
-    override suspend fun searchSongs(query: String): List<Track> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = api.searchSongs(query).execute()
-                if (response.isSuccessful) {
-                    val trackDtos = response.body()?.results ?: emptyList()
-                    trackDtos.map { TrackCreator.map(it) }
-                } else {
-                    emptyList()
-                }
-            } catch (e: Exception) {
-                emptyList()
-            }
+    override suspend fun searchSongs(query: String): Flow<List<Track>> = flow<List<Track>> {
+        try {
+            val response = api.searchSongs(query)
+            val trackDtos = response.results
+            emit(trackDtos.map { TrackCreator.map(it) })
+            emit(emptyList())
+        } catch (e: Exception) {
+            emit(emptyList())
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override fun saveTrack(track: Track) {
         searchHistory.saveHistory(track)
