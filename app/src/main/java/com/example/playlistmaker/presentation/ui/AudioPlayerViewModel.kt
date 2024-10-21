@@ -47,6 +47,8 @@ class AudioPlayerViewModel(private val interactor: FavoritesInteractor) : ViewMo
             _playerState.value = STATE_PREPARED
             _isPlaying.value = false
             stopUpdatingTime()
+
+            _trackDuration.value = TimeUtils.formatTime(0)
         }
     }
 
@@ -84,6 +86,7 @@ class AudioPlayerViewModel(private val interactor: FavoritesInteractor) : ViewMo
                     TimeUtils.formatTime(mediaPlayer?.currentPosition?.toLong() ?: 0L)
                 delay(300L)
             }
+            _trackDuration.value = TimeUtils.formatTime(0)
         }
     }
 

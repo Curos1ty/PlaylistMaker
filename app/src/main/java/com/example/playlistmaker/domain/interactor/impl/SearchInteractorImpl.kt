@@ -4,11 +4,12 @@ import com.example.playlistmaker.data.repository.TrackRepository
 import com.example.playlistmaker.domain.interactor.SearchInteractor
 import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.flow.Flow
+import com.example.playlistmaker.util.Result
 
 class SearchInteractorImpl(
     private val repository: TrackRepository
 ) : SearchInteractor {
-    override suspend fun searchSongs(query: String): Flow<List<Track>> {
+    override suspend fun searchSongs(query: String): Flow<Result<List<Track>>> {
         return repository.searchSongs(query)
     }
 

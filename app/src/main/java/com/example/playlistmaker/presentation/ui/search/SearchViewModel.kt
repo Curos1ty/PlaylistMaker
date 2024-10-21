@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.interactor.SearchInteractor
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.util.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -50,14 +51,29 @@ class SearchViewModel(
     }
 
     private suspend fun searchSongs(query: String) {
+        _showNoResultsPlaceholder.value = false
+        _showErrorPlaceholder.value = false
         _showProgressBar.value = true
-        searchInteractor.searchSongs(query).collectLatest { songs ->
+        searchInteractor.searchSongs(query).collectLatest { result ->
             _showProgressBar.value = false
-            if (songs.isEmpty()) {
-                _showNoResultsPlaceholder.value = true
-            } else {
-                _tracks.value = songs
-                _searchHistory.value = emptyList()
+            when (result) {
+                is Result.Success -> {
+                    val tracks = result.data ?: emptyList()
+                    if (tracks.isEmpty()) {
+                        _showNoResultsPlaceholder.value = true
+                    } else {
+                        _tracks.value = tracks
+                        _searchHistory.value = emptyList()
+                    }
+                }
+
+                is Result.NetworkError -> {
+                    _showErrorPlaceholder.value = true
+                }
+
+                is Result.Error -> {
+                    _showErrorPlaceholder.value = true
+                }
             }
         }
     }
@@ -90,5 +106,14 @@ class SearchViewModel(
 
     fun saveTrack(track: Track) {
         searchInteractor.saveSearchHistory(track)
+    }
+
+    fun retrySearch() {
+        val lastQuery = searchQueryFlow.value
+        if (lastQuery.isNotEmpty()) {
+            viewModelScope.launch {
+                searchSongs(lastQuery)
+            }
+        }
     }
 }

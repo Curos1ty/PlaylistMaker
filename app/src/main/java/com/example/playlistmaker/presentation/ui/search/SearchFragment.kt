@@ -136,6 +136,10 @@ class SearchFragment : Fragment() {
             searchText = savedInstanceState.getString(SEARCH_TEXT_KEY, "") ?: ""
             binding.inputEditTextSearch.setText(searchText)
         }
+
+        binding.retryButton.setOnClickListener {
+            searchViewModel.retrySearch()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
