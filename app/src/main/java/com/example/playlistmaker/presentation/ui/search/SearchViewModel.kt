@@ -1,13 +1,17 @@
 package com.example.playlistmaker.presentation.ui.search
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.interactor.SearchInteractor
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.util.Result
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -28,53 +32,64 @@ class SearchViewModel(
     private val _showErrorPlaceholder = MutableLiveData<Boolean>()
     val showErrorPlaceholder: LiveData<Boolean> = _showErrorPlaceholder
 
-    private var isSearching = false
+    private val searchQueryFlow = MutableStateFlow("")
 
-    private var searchRunnable: Runnable? = null
-    private val handler = Handler(Looper.getMainLooper())
-    private val debounceDelay = 2000L
+    init {
+        observeSearchQuery()
+    }
 
-
-    private fun searchSongs(query: String) {
-        _showProgressBar.value = true
-        isSearching = true
+    private fun observeSearchQuery() {
         viewModelScope.launch {
-            try {
-                val songs = searchInteractor.searchSongs(query)
-
-                _showProgressBar.value = false
-                if (songs.isEmpty()) {
-                    _showNoResultsPlaceholder.value = true
-                } else {
-                    _tracks.value = songs
-                    _searchHistory.value = emptyList()
+            searchQueryFlow
+                .debounce(2000)
+                .filter { query -> query.isNotEmpty() }
+                .distinctUntilChanged()
+                .collectLatest { query ->
+                    searchSongs(query)
                 }
-            } catch (e: Exception) {
-                _showProgressBar.value = false
-                _showErrorPlaceholder.value = true
-            } finally {
-                isSearching = false
+        }
+    }
+
+    private suspend fun searchSongs(query: String) {
+        _showNoResultsPlaceholder.value = false
+        _showErrorPlaceholder.value = false
+        _showProgressBar.value = true
+        searchInteractor.searchSongs(query).collectLatest { result ->
+            _showProgressBar.value = false
+            when (result) {
+                is Result.Success -> {
+                    val tracks = result.data ?: emptyList()
+                    if (tracks.isEmpty()) {
+                        _showNoResultsPlaceholder.value = true
+                    } else {
+                        _tracks.value = tracks
+                        _searchHistory.value = emptyList()
+                    }
+                }
+
+                is Result.NetworkError -> {
+                    _showErrorPlaceholder.value = true
+                }
+
+                is Result.Error -> {
+                    _showErrorPlaceholder.value = true
+                }
             }
         }
     }
 
     fun onSearchTextChanged(query: String) {
-        searchRunnable?.let { handler.removeCallbacks(it) }
+        _showNoResultsPlaceholder.value = false
+        _showErrorPlaceholder.value = false
+        searchQueryFlow.value = query
+
         if (query.isEmpty()) {
             loadSearchHistory()
-            return
-        } else {
-            _showNoResultsPlaceholder.value = false
-            _showErrorPlaceholder.value = false
-
-            searchRunnable = Runnable { searchSongs(query) }
-            handler.postDelayed(searchRunnable!!, debounceDelay)
         }
-
     }
 
     fun loadSearchHistory() {
-        if (!isSearching) {
+        if (searchQueryFlow.value.isEmpty()) {
             val history = searchInteractor.getSearchHistory()
             _searchHistory.value = history
         }
@@ -88,7 +103,17 @@ class SearchViewModel(
     fun clearTracks() {
         _tracks.value = emptyList()
     }
+
     fun saveTrack(track: Track) {
         searchInteractor.saveSearchHistory(track)
+    }
+
+    fun retrySearch() {
+        val lastQuery = searchQueryFlow.value
+        if (lastQuery.isNotEmpty()) {
+            viewModelScope.launch {
+                searchSongs(lastQuery)
+            }
+        }
     }
 }
