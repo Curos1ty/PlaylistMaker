@@ -5,12 +5,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.Track
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class TrackAdapter(
     private val trackList: MutableList<Track>,
     private val onItemClick: (Track) -> Unit
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
+    private var clickJob: Job? = null
     fun updateData(newTrackList: List<Track>) {
         trackList.clear()
         trackList.addAll(newTrackList)
@@ -27,7 +33,11 @@ class TrackAdapter(
         val track = trackList[position]
         holder.bind(track)
         holder.itemView.setOnClickListener {
-            onItemClick(track)
+            clickJob?.cancel()
+            clickJob = CoroutineScope(Dispatchers.Main).launch {
+                delay(300)
+                onItemClick(track)
+            }
         }
     }
 
