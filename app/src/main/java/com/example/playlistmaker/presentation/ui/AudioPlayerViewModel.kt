@@ -13,7 +13,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class AudioPlayerViewModel(private val interactor: FavoritesInteractor) : ViewModel() {
+class AudioPlayerViewModel(
+    private val interactor: FavoritesInteractor
+) : ViewModel() {
 
     private val _trackDuration = MutableLiveData<String>()
     val trackDuration: LiveData<String> = _trackDuration
@@ -35,9 +37,14 @@ class AudioPlayerViewModel(private val interactor: FavoritesInteractor) : ViewMo
     private var mediaPlayer: MediaPlayer? = MediaPlayer()
 
     private var updateJob: Job? = null
+
     fun preparePlayer(url: String, track: Track) {
         currentTrack = track
-        _isFavorite.value = interactor.isTrackFavorite(track.trackId)
+        viewModelScope.launch {
+            _isFavorite.value = interactor.isTrackFavorite(track.trackId)
+        }
+
+
         mediaPlayer?.setDataSource(url)
         mediaPlayer?.prepareAsync()
         mediaPlayer?.setOnPreparedListener {
@@ -51,6 +58,7 @@ class AudioPlayerViewModel(private val interactor: FavoritesInteractor) : ViewMo
             _trackDuration.value = TimeUtils.formatTime(0)
         }
     }
+
 
     fun playbackControl() {
         when (_playerState.value) {
@@ -95,12 +103,16 @@ class AudioPlayerViewModel(private val interactor: FavoritesInteractor) : ViewMo
     }
 
     fun toggleFavorite() {
-        currentTrack.inFavorites = !currentTrack.inFavorites
-        _isFavorite.value = currentTrack.inFavorites
-        if (currentTrack.inFavorites) {
-            interactor.addTrackToFavorites(currentTrack)
-        } else {
-            interactor.removeTrackFromFavorites(currentTrack)
+        viewModelScope.launch {
+            val isCurrentlyFavorite = _isFavorite.value
+            currentTrack.inFavorites = !isCurrentlyFavorite!!
+
+            _isFavorite.value = currentTrack.inFavorites
+            if (currentTrack.inFavorites) {
+                interactor.addTrackToFavorites(currentTrack)
+            } else {
+                interactor.removeTrackFromFavorites(currentTrack)
+            }
         }
     }
 

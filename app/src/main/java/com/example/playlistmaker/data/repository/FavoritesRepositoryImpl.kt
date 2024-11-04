@@ -1,22 +1,38 @@
 package com.example.playlistmaker.data.repository
 
+import com.example.playlistmaker.data.TrackCreator
+import com.example.playlistmaker.data.db.AppDatabase
+import com.example.playlistmaker.domain.db.FavoritesRepository
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.domain.repository.FavoritesRepository
-import com.example.playlistmaker.util.LocalStorage
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class FavoritesRepositoryImpl(
-    private val localStorage: LocalStorage
+    private val database: AppDatabase,
+    private val trackCreator: TrackCreator
 ) : FavoritesRepository {
 
-    override fun addTrackToFavorites(track: Track) {
-        localStorage.addToFavorites(track.trackId)
+    override suspend fun getAllFavoritesTrack(): Flow<List<Track>> {
+        return database.trackDao().getAllFavoriteTracks().map { entities ->
+            entities.map { trackCreator.mapFromEntity(it) }
+        }
     }
 
-    override fun removeTrackFromFavorites(track: Track) {
-        localStorage.removeFromFavorites(track.trackId)
+    override suspend fun addTrackToFavorites(track: Track) {
+        track.inFavorites = true
+        track.addedDate = System.currentTimeMillis()
+        val entity = trackCreator.mapToEntity(track)
+        database.trackDao().addTrackToFavorites(entity)
     }
 
-    override fun isTrackFavorite(trackId: Long): Boolean {
-        return localStorage.getSavedFavorites().contains(trackId)
+    override suspend fun removeTrackFromFavorites(track: Track) {
+        track.inFavorites = false
+        val entity = trackCreator.mapToEntity(track)
+        database.trackDao().removeTrackFromFavorites(entity)
+    }
+
+    override suspend fun isTrackFavorite(trackId: Long): Boolean {
+        val favoriteIds = database.trackDao().getFavoriteTrackId()
+        return favoriteIds.contains(trackId)
     }
 }
