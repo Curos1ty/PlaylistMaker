@@ -54,10 +54,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:maxLines="1"
                 android:maxEms="20"
+                android:maxLines="1"
                 android:textSize="@dimen/text_size_11sp"
-                tools:text="123349875438975438957894375894375893475893478957348957834975" />
+                tools:text="123" />
 
             <TextView
                 android:id="@+id/durationTrack"
