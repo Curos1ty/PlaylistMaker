@@ -92,16 +92,12 @@ class SearchFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.searchHint.isVisible =
-                    binding.inputEditTextSearch.hasFocus() && s.isNullOrEmpty()
             }
         })
 
 
 
         binding.inputEditTextSearch.setOnFocusChangeListener { _, hasFocus ->
-            binding.searchHint.visibility =
-                if (hasFocus && binding.inputEditTextSearch.text.isNullOrEmpty()) View.VISIBLE else View.GONE
             if (hasFocus && searchText.isEmpty()) {
                 searchViewModel.loadSearchHistory()
             } else {

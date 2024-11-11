@@ -20,13 +20,14 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val trackNameTextView: TextView = itemView.findViewById(R.id.songTitle)
     private val artistNameTextView: TextView = itemView.findViewById(R.id.songArtist)
     private val artworkImageView: ImageView = itemView.findViewById(R.id.songImage)
+    private val durationTextView: TextView = itemView.findViewById(R.id.durationTrack)
 
 
     fun bind(track: Track) {
-
         trackNameTextView.text = track.trackName
-        artistNameTextView.text =
-            "${track.artistName} $SEPARATOR ${formatTrackDuration(track.trackTimeMillis)}"
+        artistNameTextView.text = track.artistName
+        durationTextView.text =
+            " ${SEPARATOR} ${formatTrackDuration(track.trackTimeMillis)}"
 
         Glide.with(itemView)
             .load(track.artworkUrl100)

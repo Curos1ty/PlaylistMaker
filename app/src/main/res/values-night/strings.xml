@@ -41,4 +41,5 @@
     <string name="favorites_tracks">Избранные треки</string>
     <string name="playlists">Плейлисты</string>
     <string name="empty">Пусто</string>
+    <string name="separator">"\u2022"</string>
 </resources>
