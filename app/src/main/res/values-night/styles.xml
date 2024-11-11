@@ -126,8 +126,6 @@
     </style>
 
     <style name="optional_buttons">
-        <item name="tint">@color/white</item>
-        <item name="backgroundTint">@color/black_background</item>
         <item name="android:layout_width">@dimen/size_button_player_51dp</item>
         <item name="android:layout_height">@dimen/size_button_player_51dp</item>
     </style>

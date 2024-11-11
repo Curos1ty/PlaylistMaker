@@ -16,7 +16,8 @@ class App : Application() {
         applySavedTheme()
         startKoin {
             androidContext(this@App)
-            modules(dataModule, repositoryModule, interactorModule, viewModelModule)
+            printLogger()
+            modules(repositoryModule, viewModelModule, interactorModule, dataModule)
         }
     }
 

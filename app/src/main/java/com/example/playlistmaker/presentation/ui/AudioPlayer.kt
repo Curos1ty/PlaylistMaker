@@ -1,7 +1,6 @@
 package com.example.playlistmaker.presentation.ui
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -65,27 +64,8 @@ class AudioPlayer : AppCompatActivity() {
         binding.trackGenreLabel.text = getString(R.string.genre)
         binding.trackCountryLabel.text = getString(R.string.country)
 
-
-        binding.addToFavoriteButton.setOnClickListener {
-            audioPlayerViewModel.toggleFavorite()
-        }
-        audioPlayerViewModel.isFavorite.observe(this) { isFavorite ->
-            binding.addToFavoriteButton.setImageResource(
-                if (isFavorite) R.drawable.favourites_ok else R.drawable.favourites
-            )
-            binding.addToFavoriteButton.visibility = View.VISIBLE
-        }
-
-        binding.addToPlaylistButton.setOnClickListener {
-            audioPlayerViewModel.togglePlaylist()
-        }
-
-
-        audioPlayerViewModel.isInPlaylist.observe(this) { isInPlaylist ->
-            binding.addToPlaylistButton.setImageResource(
-                if (isInPlaylist) R.drawable.plus_ok else R.drawable.plus
-            )
-        }
+        setupFavoriteButton()
+        setupPlaylistButton()
 
     }
 
@@ -115,6 +95,25 @@ class AudioPlayer : AppCompatActivity() {
             .placeholder(R.drawable.placeholder_album_player)
             .transform(RoundedCorners(this.toPx(RADIUS).toInt()))
             .into(binding.albumArt)
+    }
+
+    private fun setupFavoriteButton() {
+        audioPlayerViewModel.isFavorite.observe(this) { isFavorite ->
+            binding.addToFavoriteButton.setImageResource(
+                if (isFavorite) R.drawable.favourites_ok else R.drawable.favourites
+            )
+        }
+        binding.addToFavoriteButton.setOnClickListener {
+            audioPlayerViewModel.toggleFavorite()
+        }
+    }
+
+    private fun setupPlaylistButton() {
+        audioPlayerViewModel.isInPlaylist.observe(this) { isInPlayList ->
+            binding.addToPlaylistButton.setImageResource(
+                if (isInPlayList) R.drawable.plus_ok else R.drawable.plus
+            )
+        }
     }
 
     companion object {
