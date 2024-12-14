@@ -1,6 +1,7 @@
 package com.example.playlistmaker.presentation.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -21,5 +22,12 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.setupWithNavController(navController)
 
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            bottomNavigationView.visibility = if (destination.id == R.id.createPlaylistFragment2) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+        }
     }
 }

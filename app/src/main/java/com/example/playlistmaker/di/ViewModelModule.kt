@@ -1,6 +1,7 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.presentation.ui.AudioPlayerViewModel
+import com.example.playlistmaker.presentation.ui.media.CreatePlaylistViewModel
 import com.example.playlistmaker.presentation.ui.media.FavoritesTracksViewModel
 import com.example.playlistmaker.presentation.ui.media.PlaylistsViewModel
 import com.example.playlistmaker.presentation.ui.search.SearchViewModel
@@ -13,6 +14,7 @@ val viewModelModule = module {
     viewModelOf(::SearchViewModel)
     viewModelOf(::AudioPlayerViewModel)
     viewModelOf(::SettingsViewModel)
-    viewModel { PlaylistsViewModel(get()) }
-    viewModel { FavoritesTracksViewModel(get()) }
+    viewModelOf(::PlaylistsViewModel)
+    viewModelOf(::FavoritesTracksViewModel)
+    viewModelOf(::CreatePlaylistViewModel)
 }

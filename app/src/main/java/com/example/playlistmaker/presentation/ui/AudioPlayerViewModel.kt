@@ -1,20 +1,25 @@
 package com.example.playlistmaker.presentation.ui
 
 import android.media.MediaPlayer
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.data.repository.PlaylistRepository
 import com.example.playlistmaker.domain.interactor.FavoritesInteractor
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.util.TimeUtils
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AudioPlayerViewModel(
-    private val interactor: FavoritesInteractor
+    private val interactor: FavoritesInteractor,
+    private val playlistRepository: PlaylistRepository
 ) : ViewModel() {
 
     private val _trackDuration = MutableLiveData<String>()
@@ -37,6 +42,17 @@ class AudioPlayerViewModel(
     private var mediaPlayer: MediaPlayer? = MediaPlayer()
 
     private var updateJob: Job? = null
+
+    private val _bottomSheetState =
+        MutableLiveData<Int>().apply { value = BottomSheetBehavior.STATE_HIDDEN }
+    val bottomSheetState: LiveData<Int> = _bottomSheetState
+
+    private val _playlists = MutableLiveData<List<Playlist>>()
+    val playlists: LiveData<List<Playlist>> = _playlists
+
+    private val _playlistActionStatus = MutableLiveData<String>()
+    val playlistActionStatus: LiveData<String> = _playlistActionStatus
+
 
     fun preparePlayer(url: String, track: Track) {
         currentTrack = track
@@ -117,7 +133,35 @@ class AudioPlayerViewModel(
     }
 
     fun togglePlaylist() {
-        _isInPlaylist.value = _isInPlaylist.value?.not()
+        _bottomSheetState.value =
+            if (_bottomSheetState.value == BottomSheetBehavior.STATE_COLLAPSED or BottomSheetBehavior.STATE_EXPANDED) {
+                BottomSheetBehavior.STATE_HIDDEN
+            } else {
+                BottomSheetBehavior.STATE_COLLAPSED
+            }
+    }
+
+    fun loadPlaylists() {
+        viewModelScope.launch {
+            playlistRepository.getAllPlaylists().collect { playlistList ->
+                _playlists.value = playlistList
+            }
+        }
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist) {
+        viewModelScope.launch {
+            if (playlist.trackIds.contains(currentTrack.trackId)) {
+                _playlistActionStatus.value = "Трек уже добавлен в плейлист ${playlist.name}"
+            } else {
+                playlistRepository.addTrackToPlaylist(currentTrack, playlist)
+                _isInPlaylist.value = true
+                Log.d("BSheet", _bottomSheetState.value.toString())
+                _bottomSheetState.value = BottomSheetBehavior.STATE_HIDDEN
+                _playlistActionStatus.value = "Трек добавлен в плейлист ${playlist.name}"
+            }
+
+        }
     }
 
     companion object {

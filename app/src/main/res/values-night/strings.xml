@@ -23,7 +23,7 @@
     <string name="search_history_title">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
     <string name="album_art">обложка альбома</string>
-    <string name="add_to_playlist">добавить в плейлист</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
     <string name="play_pause">Включить, пауза</string>
     <string name="favourite">добавить в избранное</string>
     <string name="unknownAlbum">Неизвестный альбом</string>
@@ -41,4 +41,7 @@
     <string name="favorites_tracks">Избранные треки</string>
     <string name="playlists">Плейлисты</string>
     <string name="empty">Пусто</string>
+    <string name="name_playlist">Название*</string>
+    <string name="description_playlist">Описание</string>
+    <string name="create_playlist">Создать</string>
 </resources>
