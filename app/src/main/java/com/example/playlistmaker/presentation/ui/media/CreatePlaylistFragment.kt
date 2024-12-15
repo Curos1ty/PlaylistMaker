@@ -101,17 +101,11 @@ class CreatePlaylistFragment : Fragment() {
                 }
 
                 override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (!s.isNullOrEmpty()) {
-                        viewModel.setName(s.toString())
-                        binding.editTitlePlaylistBackground.isActivated = s.isNotEmpty()
-                        updateCreateButtonState()
-                    }
+                    viewModel.setName(s.toString())
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
-                    if (p0 != null) {
-                        binding.editTitlePlaylistBackground.isActivated = p0.isNotEmpty()
-                    }
+                    updateCreateButtonState()
                 }
             }
         )
@@ -123,19 +117,21 @@ class CreatePlaylistFragment : Fragment() {
                 }
 
                 override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (!s.isNullOrEmpty()) {
-                        viewModel.setDescription(s.toString())
-                        binding.editDescriptionPlaylistBackground.isActivated = s.isNotEmpty()
-                    }
+                    viewModel.setDescription(s.toString())
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
-                    if (p0 != null) {
-                        binding.editTitlePlaylistBackground.isActivated = p0.isNotEmpty()
-                    }
                 }
             }
         )
+
+        viewModel.isTitleFilled.observe(viewLifecycleOwner) { isFilled ->
+            binding.editTitlePlaylistBackground.isActivated = isFilled
+        }
+        viewModel.isDescriptionFilled.observe(viewLifecycleOwner) { isFilled ->
+            binding.editDescriptionPlaylistBackground.isActivated = isFilled
+        }
+
 
         binding.editTitlePlaylist.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -165,16 +161,20 @@ class CreatePlaylistFragment : Fragment() {
                 onSuccess = {
                     MaterialAlertDialogBuilder(requireContext())
                         .setMessage("Плейлист \"${viewModel.currentPlaylistName}\" создан")
-                        .setPositiveButton("ОК") { dialog, _ ->
+                        .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                             dialog.dismiss()
-                            parentFragmentManager.popBackStack()
+                            if (hasNavController()) {
+                                findNavController().navigateUp()
+                            } else {
+                                parentFragmentManager.popBackStack()
+                            }
                         }
                         .show()
                 },
                 onError = { errorMessage ->
                     MaterialAlertDialogBuilder(requireContext())
                         .setMessage(errorMessage)
-                        .setPositiveButton("ОК") { dialog, _ ->
+                        .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                             dialog.dismiss()
                         }
                         .show()
@@ -189,9 +189,9 @@ class CreatePlaylistFragment : Fragment() {
             viewModel.currentPlaylistImagePath != null
         ) {
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Завершить создание плейлиста?")
-                .setMessage("Все несохраненные данные будут потеряны")
-                .setPositiveButton("Завершить") { _, _ ->
+                .setTitle(getString(R.string.dialog_exit_creation_title))
+                .setMessage(getString(R.string.dialog_exit_creation_message))
+                .setPositiveButton(getString(R.string.dialog_exit_positive)) { _, _ ->
                     if (hasNavController()) {
                         findNavController().navigateUp()
                     } else {
@@ -199,7 +199,7 @@ class CreatePlaylistFragment : Fragment() {
                     }
 
                 }
-                .setNegativeButton("Отмена") { dialog, _ ->
+                .setNegativeButton(getString(R.string.dialog_exit_negative)) { dialog, _ ->
                     dialog.dismiss()
                 }
                 .create()
@@ -249,7 +249,7 @@ class CreatePlaylistFragment : Fragment() {
     private fun saveImageToPrivateStorage(uri: Uri): String? {
         val filePath = File(
             requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            "playlit_cover_album"
+            PLAYLIST_COVER_ALBUM
         )
         if (!filePath.exists()) {
             filePath.mkdirs()
@@ -279,9 +279,12 @@ class CreatePlaylistFragment : Fragment() {
         fun newInstance(isFromActivity: Boolean): CreatePlaylistFragment {
             val fragment = CreatePlaylistFragment()
             fragment.arguments = Bundle().apply {
-                putBoolean("isFromAcitivty", isFromActivity)
+                putBoolean(IS_FROM_ACTIVITY, isFromActivity)
             }
             return fragment
         }
+
+        const val PLAYLIST_COVER_ALBUM = "playlist_cover_album"
+        const val IS_FROM_ACTIVITY = "isFromActivity"
     }
 }

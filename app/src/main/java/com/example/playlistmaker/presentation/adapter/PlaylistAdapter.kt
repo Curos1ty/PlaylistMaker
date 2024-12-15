@@ -36,14 +36,14 @@ class PlaylistAdapter(
 
         if (onPlaylistClick != null) {
             holder.itemView.setOnClickListener {
-                if (!isInBottomSheet || true) {
+                if (!isInBottomSheet) {
                     onPlaylistClick?.let { it1 -> it1(playlist) }
                 }
             }
         } else {
             holder.itemView.setOnClickListener(null)
         }
-        holder.itemView.setOnClickListener { onPlaylistClick?.let { it1 -> it1(playlist) } }
+        holder.itemView.setOnClickListener { onPlaylistClick?.let { it(playlist) } }
 
     }
 }

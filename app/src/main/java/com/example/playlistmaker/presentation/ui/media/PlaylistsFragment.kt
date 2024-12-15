@@ -47,10 +47,11 @@ class PlaylistsFragment : Fragment() {
         }
 
         binding.createPlaylistButton.setOnClickListener {
+            findNavController().popBackStack(R.id.createPlaylistFragment2, true)
             findNavController().navigate(
                 R.id.action_mediaLibraryFragment2_to_createPlaylistFragment2,
                 Bundle().apply {
-                    putBoolean("isFromActivity", false)
+                    putBoolean(IS_FROM_ACTIVITY, false)
                 }
             )
         }
@@ -68,5 +69,6 @@ class PlaylistsFragment : Fragment() {
 
     companion object {
         fun newInstance() = PlaylistsFragment()
+        const val IS_FROM_ACTIVITY = "isFromActivity"
     }
 }

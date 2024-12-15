@@ -1,6 +1,7 @@
 package com.example.playlistmaker.presentation.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -23,10 +24,11 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            bottomNavigationView.visibility = if (destination.id == R.id.createPlaylistFragment2) {
-                View.GONE
-            } else {
-                View.VISIBLE
+            Log.d("MMENU", destination.id.toString())
+            Log.d("MMENU", "ID CREATEFRAGMENT " + R.id.createPlaylistFragment2)
+            bottomNavigationView.visibility = when (destination.id) {
+                R.id.createPlaylistFragment2 -> View.GONE
+                else -> View.VISIBLE
             }
         }
     }

@@ -8,19 +8,21 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.repository.PlaylistRepository
 import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.util.ResourceProvider
 import kotlinx.coroutines.launch
 
 class CreatePlaylistViewModel(
-    private val playlistRepository: PlaylistRepository
+    private val playlistRepository: PlaylistRepository,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _imageScaleType = MutableLiveData<ImageView.ScaleType>()
     val imageScaleType: LiveData<ImageView.ScaleType> = _imageScaleType
 
-    private val _titleBorderColor = MutableLiveData<Int>()
-    val titleBorderColor: LiveData<Int> = _titleBorderColor
+    private val _isTitleFilled = MutableLiveData<Boolean>()
+    val isTitleFilled: LiveData<Boolean> = _isTitleFilled
 
-    private val _descriptionBorderColor = MutableLiveData<Int>()
-    val descriptionBorderColor: LiveData<Int> = _descriptionBorderColor
+    private val _isDescriptionFilled = MutableLiveData<Boolean>()
+    val isDescriptionFilled: LiveData<Boolean> = _isDescriptionFilled
 
     var currentPlaylistName: String = ""
     var currentPlaylistDescription: String = ""
@@ -28,13 +30,12 @@ class CreatePlaylistViewModel(
 
     fun setName(name: String) {
         currentPlaylistName = name
-        _titleBorderColor.value = if (name.isNotBlank()) R.color.blue_background else R.color.gray
+        _isTitleFilled.value = name.isNotBlank()
     }
 
     fun setDescription(description: String) {
         currentPlaylistDescription = description
-        _descriptionBorderColor.value =
-            if (description.isNotBlank()) R.color.blue_background else R.color.gray
+        _isDescriptionFilled.value = description.isNotBlank()
     }
 
     fun setImagePath(imagePath: String?) {
@@ -44,7 +45,7 @@ class CreatePlaylistViewModel(
 
     fun savePlaylist(onSuccess: () -> Unit, onError: (String) -> Unit) {
         if (currentPlaylistName.isBlank()) {
-            onError("Название плейлиста не может быть пустым")
+            onError(resourceProvider.getString(R.string.text_name_playlist_cannot_be_empty))
             return
         }
 
@@ -61,7 +62,9 @@ class CreatePlaylistViewModel(
                 playlistRepository.addPlaylist(playlist)
                 onSuccess()
             } catch (e: Exception) {
-                onError(e.message ?: "Ошибка сохранения плейлиста")
+                onError(
+                    e.message ?: resourceProvider.getString(R.string.text_error_saving_playlist)
+                )
             }
         }
     }

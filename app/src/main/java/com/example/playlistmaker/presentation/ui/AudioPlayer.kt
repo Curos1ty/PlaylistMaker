@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -104,15 +105,7 @@ class AudioPlayer : AppCompatActivity() {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
 
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        binding.overlay.visibility = View.GONE
-                    }
-
-                    else -> {
-                        binding.overlay.visibility = View.VISIBLE
-                    }
-                }
+                binding.overlay.isVisible = newState != BottomSheetBehavior.STATE_HIDDEN
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}

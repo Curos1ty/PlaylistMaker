@@ -45,4 +45,11 @@
     <string name="name_playlist">Название*</string>
     <string name="description_playlist">Описание</string>
     <string name="create_playlist">Создать</string>
+    <string name="text_error_saving_playlist">Ошибка сохранения плейлиста</string>
+    <string name="text_name_playlist_cannot_be_empty">Название плейлиста не может быть пустым</string>
+    <string name="dialog_exit_creation_title">Завершить создание плейлиста?</string>
+    <string name="dialog_exit_creation_message">Все несохраненные данные будут потеряны</string>
+    <string name="dialog_exit_positive">Завершить</string>
+    <string name="dialog_exit_negative">Отмена</string>
+    <string name="ok">ОК</string>
 </resources>
