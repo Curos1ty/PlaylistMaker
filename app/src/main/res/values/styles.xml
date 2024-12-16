@@ -30,6 +30,7 @@
         <item name="android:layout_height">@dimen/layout_height_toolbar_56dp</item>
         <item name="android:textSize">@dimen/text_size_22sp</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/black_background</item>
     </style>
 
     <style name="EditSearchImageClear">
@@ -130,6 +131,15 @@
 
     <style name="playPauseButton">
         <item name="backgroundTint">@color/white</item>
+    </style>
+
+    <style name="createPlaylistEditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/text_input_stroke_color</item>
+        <item name="hintTextColor">@color/text_input_stroke_color</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+        <item name="android:layout_marginStart">@dimen/paddingHorizontal_16dp</item>
+        <item name="android:layout_marginEnd">@dimen/paddingHorizontal_16dp</item>
     </style>
 
 </resources>

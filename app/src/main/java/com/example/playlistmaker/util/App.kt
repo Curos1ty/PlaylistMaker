@@ -22,8 +22,8 @@ class App : Application() {
     }
 
     private fun applySavedTheme() {
-        val sharedPreferences = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
-        val isDarkTheme = sharedPreferences.getBoolean("dark_theme", false)
+        val sharedPreferences = getSharedPreferences(THEME_PREFS, Context.MODE_PRIVATE)
+        val isDarkTheme = sharedPreferences.getBoolean(DARK_THEME_KEY, false)
         AppCompatDelegate.setDefaultNightMode(
             if (isDarkTheme) {
                 AppCompatDelegate.MODE_NIGHT_YES
@@ -34,9 +34,9 @@ class App : Application() {
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
-        val sharedPreferences = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences(THEME_PREFS, Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
-            putBoolean("dark_theme", darkThemeEnabled)
+            putBoolean(DARK_THEME_KEY, darkThemeEnabled)
             apply()
         }
         AppCompatDelegate.setDefaultNightMode(
@@ -46,5 +46,10 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
+    }
+
+    companion object {
+        const val THEME_PREFS = "theme_prefs"
+        const val DARK_THEME_KEY = "dark_theme"
     }
 }

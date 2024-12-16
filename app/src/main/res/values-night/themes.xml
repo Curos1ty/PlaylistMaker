@@ -19,6 +19,7 @@
     <style name="ThemeAudioPlayerActivity" parent="Base.Theme.PlaylistMaker">
         <item name="android:background">@color/black_background</item>
         <item name="iconTint">@color/white</item>
+        <item name="colorPrimary">@color/black_background</item>
     </style>
 
     <style name="ThemeMediaLibraryActivity" parent="Base.Theme.PlaylistMaker">

@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:theme="@style/ThemeSearchActivity">
+    android:theme="@style/ThemeSearchActivity"
+    tools:context=".presentation.ui.media.CreatePlaylistFragment">
+
+    <FrameLayout
+        android:id="@+id/container_create_playlist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/create_playlist_button"
@@ -12,15 +20,24 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/new_playlist"
-        android:visibility="visible" />
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/playlist_recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/empty_playlist_placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="46dp"
         android:contentDescription="@string/empty"
-        android:src="@drawable/empty_search" />
+        android:src="@drawable/empty_search"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/create_playlist_button" />
 
     <TextView
         android:id="@+id/empty_text"
@@ -28,5 +45,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="16dp" />
-</LinearLayout>
+        android:layout_marginTop="16dp"
+        android:text="@string/empty_search"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/empty_playlist_placeholder" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlist_recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/create_playlist_button"
+        tools:listitem="@layout/item_playlist_fragment" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

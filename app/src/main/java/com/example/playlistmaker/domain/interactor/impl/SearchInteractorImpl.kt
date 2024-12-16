@@ -3,8 +3,8 @@ package com.example.playlistmaker.domain.interactor.impl
 import com.example.playlistmaker.data.repository.TrackRepository
 import com.example.playlistmaker.domain.interactor.SearchInteractor
 import com.example.playlistmaker.domain.model.Track
-import kotlinx.coroutines.flow.Flow
 import com.example.playlistmaker.util.Result
+import kotlinx.coroutines.flow.Flow
 
 class SearchInteractorImpl(
     private val repository: TrackRepository

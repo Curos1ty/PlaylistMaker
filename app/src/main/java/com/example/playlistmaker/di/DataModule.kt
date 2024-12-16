@@ -8,6 +8,8 @@ import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.network.ITunesApi
 import com.example.playlistmaker.data.sharing.ExternalNavigator
 import com.example.playlistmaker.data.sharing.impl.ExternalNavigatorImpl
+import com.example.playlistmaker.data.storage.FileStorageImpl
+import com.example.playlistmaker.domain.repository.FileStorage
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -32,6 +34,13 @@ val dataModule = module {
 
     single {
         Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .fallbackToDestructiveMigration()
             .build()
     }
+
+    single { get<AppDatabase>().trackDao() }
+    single { get<AppDatabase>().playlistDao() }
+    single { get<AppDatabase>().playlistTrackDao() }
+
+    single<FileStorage> { FileStorageImpl(get()) }
 }

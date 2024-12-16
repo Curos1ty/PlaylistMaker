@@ -9,7 +9,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMediaLibraryBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
-class MediaLibraryFragment: Fragment() {
+class MediaLibraryFragment : Fragment() {
     private var _binding: FragmentMediaLibraryBinding? = null
     private val binding get() = _binding!!
     private lateinit var tabMediator: TabLayoutMediator

@@ -8,6 +8,7 @@ fun Context.toPx(dp: Int): Float = TypedValue.applyDimension(
     dp.toFloat(),
     resources.displayMetrics
 )
+
 object TimeUtils {
     fun formatTime(millis: Long): String {
         val minutes = (millis / 1000) / 60
@@ -19,5 +20,5 @@ object TimeUtils {
 sealed class Result<out T> {
     data class Success<out T>(val data: T) : Result<T>()
     data class Error(val exception: Throwable) : Result<Nothing>()
-    data object NetworkError: Result<Nothing>()
+    data object NetworkError : Result<Nothing>()
 }

@@ -6,7 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.interactor.FavoritesInteractor
+import com.example.playlistmaker.domain.interactor.PlaylistInteractor
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.presentation.ui.media.PlaylistTrackStatus
 import com.example.playlistmaker.util.TimeUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -14,7 +17,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AudioPlayerViewModel(
-    private val interactor: FavoritesInteractor
+    private val interactor: FavoritesInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     private val _trackDuration = MutableLiveData<String>()
@@ -38,6 +42,12 @@ class AudioPlayerViewModel(
 
     private var updateJob: Job? = null
 
+    private val _playlists = MutableLiveData<List<Playlist>>()
+    val playlists: LiveData<List<Playlist>> = _playlists
+
+    private val _playlistActionStatus = MutableLiveData<Pair<PlaylistTrackStatus, String>>()
+    val playlistActionStatus: LiveData<Pair<PlaylistTrackStatus, String>> = _playlistActionStatus
+
     fun preparePlayer(url: String, track: Track) {
         currentTrack = track
         viewModelScope.launch {
@@ -58,7 +68,6 @@ class AudioPlayerViewModel(
             _trackDuration.value = TimeUtils.formatTime(0)
         }
     }
-
 
     fun playbackControl() {
         when (_playerState.value) {
@@ -116,8 +125,25 @@ class AudioPlayerViewModel(
         }
     }
 
-    fun togglePlaylist() {
-        _isInPlaylist.value = _isInPlaylist.value?.not()
+    fun loadPlaylists() {
+        viewModelScope.launch {
+            playlistInteractor.getAllPlaylists().collect { playlistList ->
+                _playlists.value = playlistList
+            }
+        }
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist) {
+        viewModelScope.launch {
+            val isAdded = playlistInteractor.addTrackToPlaylist(currentTrack, playlist)
+            if (isAdded) {
+                _playlistActionStatus.value = PlaylistTrackStatus.ALREADY_ADDED to playlist.name
+            } else {
+                _playlistActionStatus.value = PlaylistTrackStatus.ADDED to playlist.name
+                _isInPlaylist.value = true
+            }
+
+        }
     }
 
     companion object {
