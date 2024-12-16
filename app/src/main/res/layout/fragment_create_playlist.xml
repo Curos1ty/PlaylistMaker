@@ -52,7 +52,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:hint="@string/name_playlist"
-        app:boxStrokeColor="@color/text_input_stroke_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imagePlayList">
@@ -72,7 +71,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="@string/description_playlist"
-        app:boxStrokeColor="@color/text_input_stroke_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_title_playlist_background">
@@ -94,7 +92,7 @@
         android:layout_marginTop="170dp"
         android:layout_marginEnd="17dp"
         android:layout_marginBottom="32dp"
-        android:backgroundTint="@color/gray"
+        android:backgroundTint="@color/button_background_color_selector"
         android:enabled="false"
         android:fontFamily="@font/ys_display_medium"
         android:shape="rectangle"

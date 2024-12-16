@@ -1,11 +1,8 @@
 package com.example.playlistmaker.presentation.ui.media
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -17,7 +14,6 @@ import android.widget.ImageView
 import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
@@ -25,8 +21,6 @@ import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.example.playlistmaker.presentation.ui.AudioPlayer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
-import java.io.FileOutputStream
 
 class CreatePlaylistFragment : Fragment() {
     private var _binding: FragmentCreatePlaylistBinding? = null
@@ -37,7 +31,7 @@ class CreatePlaylistFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentCreatePlaylistBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -47,14 +41,6 @@ class CreatePlaylistFragment : Fragment() {
         setupToolbar()
         setupListeners()
         setupImageSelection()
-
-
-
-        viewModel.imageScaleType.observe(viewLifecycleOwner) { scaleType ->
-            binding.playlistCoverImage.scaleType = scaleType
-        }
-
-
 
         if (viewModel.currentPlaylistImagePath != null) {
             binding.playlistCoverImage.scaleType = ImageView.ScaleType.CENTER_CROP
@@ -125,14 +111,6 @@ class CreatePlaylistFragment : Fragment() {
             }
         )
 
-        viewModel.isTitleFilled.observe(viewLifecycleOwner) { isFilled ->
-            binding.editTitlePlaylistBackground.isActivated = isFilled
-        }
-        viewModel.isDescriptionFilled.observe(viewLifecycleOwner) { isFilled ->
-            binding.editDescriptionPlaylistBackground.isActivated = isFilled
-        }
-
-
         binding.editTitlePlaylist.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 binding.editDescriptionPlaylist.requestFocus()
@@ -157,10 +135,11 @@ class CreatePlaylistFragment : Fragment() {
         }
 
         binding.createPlaylistButton.setOnClickListener {
+            val message = getString(R.string.playlist_created, viewModel.currentPlaylistName)
             viewModel.savePlaylist(
                 onSuccess = {
                     MaterialAlertDialogBuilder(requireContext())
-                        .setMessage("Плейлист \"${viewModel.currentPlaylistName}\" создан")
+                        .setMessage(message)
                         .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                             dialog.dismiss()
                             if (hasNavController()) {
@@ -173,7 +152,7 @@ class CreatePlaylistFragment : Fragment() {
                 },
                 onError = { errorMessage ->
                     MaterialAlertDialogBuilder(requireContext())
-                        .setMessage(errorMessage)
+                        .setMessage(getString(errorMessage.messageResId))
                         .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                             dialog.dismiss()
                         }
@@ -216,10 +195,6 @@ class CreatePlaylistFragment : Fragment() {
     private fun updateCreateButtonState() {
         val isTitleFilled = binding.editTitlePlaylist.text?.isNotBlank() == true
         binding.createPlaylistButton.isEnabled = isTitleFilled
-        binding.createPlaylistButton.backgroundTintList = ContextCompat.getColorStateList(
-            requireContext(),
-            if (isTitleFilled) R.color.blue_background else R.color.gray
-        )
     }
 
     override fun onDestroyView() {
@@ -232,7 +207,8 @@ class CreatePlaylistFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
                     binding.playlistCoverImage.setImageURI(uri)
-                    viewModel.setImagePath(saveImageToPrivateStorage(uri))
+                    binding.playlistCoverImage.scaleType = ImageView.ScaleType.CENTER_CROP
+                    viewModel.setImagePath(uri)
                 }
             }
 
@@ -242,28 +218,8 @@ class CreatePlaylistFragment : Fragment() {
 
         if (viewModel.currentPlaylistImagePath != null) {
             binding.playlistCoverImage.setImageURI(Uri.parse(viewModel.currentPlaylistImagePath))
-        } else {
+            binding.playlistCoverImage.scaleType = ImageView.ScaleType.CENTER_CROP
         }
-    }
-
-    private fun saveImageToPrivateStorage(uri: Uri): String? {
-        val filePath = File(
-            requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            PLAYLIST_COVER_ALBUM
-        )
-        if (!filePath.exists()) {
-            filePath.mkdirs()
-        }
-        val fileName = "${System.currentTimeMillis()}.jpg"
-        val file = File(filePath, fileName)
-        val inputStream = context?.contentResolver?.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
-        BitmapFactory.decodeStream(inputStream)
-            ?.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-        outputStream.flush()
-        outputStream.close()
-        inputStream?.close()
-        return file.absolutePath
     }
 
     private fun hasNavController(): Boolean {
@@ -284,7 +240,6 @@ class CreatePlaylistFragment : Fragment() {
             return fragment
         }
 
-        const val PLAYLIST_COVER_ALBUM = "playlist_cover_album"
         const val IS_FROM_ACTIVITY = "isFromActivity"
     }
 }

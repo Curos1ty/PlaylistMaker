@@ -8,8 +8,8 @@ import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.network.ITunesApi
 import com.example.playlistmaker.data.sharing.ExternalNavigator
 import com.example.playlistmaker.data.sharing.impl.ExternalNavigatorImpl
-import com.example.playlistmaker.util.ResourceProvider
-import com.example.playlistmaker.util.ResourceProviderImpl
+import com.example.playlistmaker.data.storage.FileStorageImpl
+import com.example.playlistmaker.domain.repository.FileStorage
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -40,7 +40,7 @@ val dataModule = module {
 
     single { get<AppDatabase>().trackDao() }
     single { get<AppDatabase>().playlistDao() }
-    single { get<AppDatabase>().playlistTrackDao()}
+    single { get<AppDatabase>().playlistTrackDao() }
 
-    single<ResourceProvider> {ResourceProviderImpl(androidContext())}
+    single<FileStorage> { FileStorageImpl(get()) }
 }

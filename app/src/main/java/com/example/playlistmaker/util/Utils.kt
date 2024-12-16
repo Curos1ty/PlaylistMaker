@@ -1,14 +1,7 @@
 package com.example.playlistmaker.util
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.os.Environment
 import android.util.TypedValue
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
 
 fun Context.toPx(dp: Int): Float = TypedValue.applyDimension(
     TypedValue.COMPLEX_UNIT_DIP,

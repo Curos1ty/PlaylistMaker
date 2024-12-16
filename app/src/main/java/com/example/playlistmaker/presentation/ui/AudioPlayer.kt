@@ -13,6 +13,7 @@ import com.example.playlistmaker.data.model.TrackDto
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.presentation.adapter.PlaylistAdapter
 import com.example.playlistmaker.presentation.ui.media.CreatePlaylistFragment
+import com.example.playlistmaker.presentation.ui.media.PlaylistTrackStatus
 import com.example.playlistmaker.util.TimeUtils
 import com.example.playlistmaker.util.toPx
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -31,11 +32,11 @@ class AudioPlayer : AppCompatActivity() {
         binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet)
+
+        setupBottomSheet()
         setupPlaylistBottomSheet()
         audioPlayerViewModel.loadPlaylists()
-
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         val toolbar = binding.audioPlayerToolbar
         toolbar.setNavigationOnClickListener {
@@ -74,9 +75,6 @@ class AudioPlayer : AppCompatActivity() {
 
         }
 
-        audioPlayerViewModel.bottomSheetState.observe(this) { state ->
-            bottomSheetBehavior.state = state
-        }
         binding.trackDurationLabel.text = getString(R.string.duration)
         binding.albumNameLabel.text = getString(R.string.album)
         binding.trackYearLabel.text = getString(R.string.releaseYear)
@@ -99,18 +97,6 @@ class AudioPlayer : AppCompatActivity() {
                 .addToBackStack(null)
                 .commit()
         }
-
-        bottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-
-                binding.overlay.isVisible = newState != BottomSheetBehavior.STATE_HIDDEN
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-        })
-
     }
 
     override fun onPause() {
@@ -159,7 +145,7 @@ class AudioPlayer : AppCompatActivity() {
             )
         }
         binding.addToPlaylistButton.setOnClickListener {
-            audioPlayerViewModel.togglePlaylist()
+            updateBottomSheetState()
         }
     }
 
@@ -169,10 +155,21 @@ class AudioPlayer : AppCompatActivity() {
                 audioPlayerViewModel.addTrackToPlaylist(playlist)
             }, isInBottomSheet = true
         )
-        audioPlayerViewModel.playlistActionStatus.observe(this) { status ->
+        audioPlayerViewModel.playlistActionStatus.observe(this) { (status, playlistName) ->
+            val message = when (status) {
+                PlaylistTrackStatus.ALREADY_ADDED -> getString(
+                    R.string.already_added_track_in_playlist,
+                    playlistName
+                )
+
+                PlaylistTrackStatus.ADDED -> {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    getString(R.string.added_track_to_playlist, playlistName)
+                }
+            }
             MaterialAlertDialogBuilder(this)
-                .setMessage(status)
-                .setPositiveButton("ОК") { dialog, _ ->
+                .setMessage(message)
+                .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                     dialog.dismiss()
                 }
                 .show()
@@ -185,7 +182,6 @@ class AudioPlayer : AppCompatActivity() {
         }
 
         binding.createPlaylistButton.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             binding.fragmentContainer.visibility = View.VISIBLE
 
             supportFragmentManager.beginTransaction()
@@ -200,6 +196,30 @@ class AudioPlayer : AppCompatActivity() {
 
     fun setActivityVisibility(visible: Boolean) {
         binding.audioPlayerContent.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    private fun setupBottomSheet() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                binding.overlay.isVisible = newState != BottomSheetBehavior.STATE_HIDDEN
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+    }
+
+    private fun updateBottomSheetState() {
+        when (bottomSheetBehavior.state) {
+            BottomSheetBehavior.STATE_HIDDEN -> bottomSheetBehavior.state =
+                BottomSheetBehavior.STATE_COLLAPSED
+
+            else -> bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
     }
 
     companion object {

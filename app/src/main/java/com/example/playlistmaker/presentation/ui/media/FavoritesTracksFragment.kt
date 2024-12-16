@@ -2,12 +2,10 @@ package com.example.playlistmaker.presentation.ui.media
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore.Audio
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.playlistmaker.R
 import com.example.playlistmaker.data.TrackCreator
 import com.example.playlistmaker.databinding.FragmentFavoritesTracksBinding
 import com.example.playlistmaker.domain.model.Track

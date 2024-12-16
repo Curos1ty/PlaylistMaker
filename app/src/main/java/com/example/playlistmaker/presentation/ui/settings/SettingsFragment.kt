@@ -10,7 +10,7 @@ import com.example.playlistmaker.presentation.ui.settings.view_model.SettingsVie
 import com.example.playlistmaker.util.App
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsFragment: Fragment() {
+class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 

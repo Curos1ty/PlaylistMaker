@@ -1,8 +1,8 @@
 package com.example.playlistmaker.domain.interactor.impl
 
+import com.example.playlistmaker.domain.db.FavoritesRepository
 import com.example.playlistmaker.domain.interactor.FavoritesInteractor
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.domain.db.FavoritesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -10,10 +10,11 @@ class FavoritesInteractorImpl(
     private val repository: FavoritesRepository
 ) : FavoritesInteractor {
     override suspend fun getAllFavoritesTracks(): Flow<List<Track>> {
-        return repository.getAllFavoritesTrack().map {tracks ->
-            tracks.sortedBy {it.addedDate}
+        return repository.getAllFavoritesTrack().map { tracks ->
+            tracks.sortedBy { it.addedDate }
         }
     }
+
     override suspend fun addTrackToFavorites(track: Track) {
         repository.addTrackToFavorites(track)
     }
