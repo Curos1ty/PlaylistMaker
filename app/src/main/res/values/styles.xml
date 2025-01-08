@@ -142,4 +142,20 @@
         <item name="android:layout_marginEnd">@dimen/paddingHorizontal_16dp</item>
     </style>
 
+    <style name="playlistInfoText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">@color/black_background</item>
+    </style>
+
+    <style name="playlistInfoName">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/ys_display_bold</item>
+        <item name="android:textColor">@color/black_background</item>
+    </style>
+
+    <style name="playlistInfoTextMenu" parent="ButtonStyleSettings">
+        <item name="android:textColor">@color/black_background</item>
+        <item name="android:background">?attr/colorSecondary</item>
+    </style>
 </resources>

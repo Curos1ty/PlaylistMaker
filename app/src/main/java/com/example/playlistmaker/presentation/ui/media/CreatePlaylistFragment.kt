@@ -22,9 +22,9 @@ import com.example.playlistmaker.presentation.ui.AudioPlayer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CreatePlaylistFragment : Fragment() {
-    private var _binding: FragmentCreatePlaylistBinding? = null
-    private val binding get() = _binding!!
+open class CreatePlaylistFragment : Fragment() {
+    protected var _binding: FragmentCreatePlaylistBinding? = null
+    protected val binding get() = _binding!!
     private val viewModel: CreatePlaylistViewModel by viewModel()
 
     override fun onCreateView(
@@ -42,16 +42,16 @@ class CreatePlaylistFragment : Fragment() {
         setupListeners()
         setupImageSelection()
 
-        if (viewModel.currentPlaylistImagePath != null) {
+        if (viewModel.currentPlaylistImagePath.value != null) {
             binding.playlistCoverImage.scaleType = ImageView.ScaleType.CENTER_CROP
-            binding.playlistCoverImage.setImageURI(Uri.parse(viewModel.currentPlaylistImagePath))
+            binding.playlistCoverImage.setImageURI(Uri.parse(viewModel.currentPlaylistImagePath.value))
         }
 
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            if (viewModel.currentPlaylistName.isNotBlank() ||
-                viewModel.currentPlaylistDescription.isNotBlank() ||
-                viewModel.currentPlaylistImagePath != null
+            if (viewModel.currentPlaylistName.value?.isNotBlank() == true ||
+                viewModel.currentPlaylistDescription.value?.isNotBlank() == true ||
+                viewModel.currentPlaylistImagePath.value != null
             ) {
                 showExitConfirmationDialog()
             } else {
@@ -135,7 +135,7 @@ class CreatePlaylistFragment : Fragment() {
         }
 
         binding.createPlaylistButton.setOnClickListener {
-            val message = getString(R.string.playlist_created, viewModel.currentPlaylistName)
+            val message = getString(R.string.playlist_created, viewModel.currentPlaylistName.value)
             viewModel.savePlaylist(
                 onSuccess = {
                     MaterialAlertDialogBuilder(requireContext())
@@ -163,9 +163,9 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun showExitConfirmationDialog() {
-        if (viewModel.currentPlaylistName.isNotBlank() ||
-            viewModel.currentPlaylistDescription.isNotBlank() ||
-            viewModel.currentPlaylistImagePath != null
+        if (viewModel.currentPlaylistName.value?.isNotBlank() == true ||
+            viewModel.currentPlaylistDescription.value?.isNotBlank() == true ||
+            viewModel.currentPlaylistImagePath.value != null
         ) {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.dialog_exit_creation_title))
@@ -216,9 +216,11 @@ class CreatePlaylistFragment : Fragment() {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-        if (viewModel.currentPlaylistImagePath != null) {
-            binding.playlistCoverImage.setImageURI(Uri.parse(viewModel.currentPlaylistImagePath))
-            binding.playlistCoverImage.scaleType = ImageView.ScaleType.CENTER_CROP
+        viewModel.currentPlaylistImagePath.observe(viewLifecycleOwner) { coverImageUri ->
+            if (coverImageUri != null) {
+                binding.playlistCoverImage.setImageURI(Uri.parse(coverImageUri))
+                binding.playlistCoverImage.scaleType = ImageView.ScaleType.CENTER_CROP
+            }
         }
     }
 

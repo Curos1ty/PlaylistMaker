@@ -13,7 +13,8 @@ import kotlinx.coroutines.launch
 
 class TrackAdapter(
     private val trackList: MutableList<Track>,
-    private val onItemClick: (Track) -> Unit
+    private val onItemClick: (Track) -> Unit,
+    private val onItemLongClick: ((Track) -> Unit)? = null
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
     private var clickJob: Job? = null
@@ -38,6 +39,11 @@ class TrackAdapter(
                 delay(300)
                 onItemClick(track)
             }
+        }
+
+        holder.itemView.setOnLongClickListener{
+            onItemLongClick?.invoke(track)
+            true
         }
     }
 

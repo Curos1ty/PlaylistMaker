@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.presentation.adapter.PlaylistAdapter
+import com.example.playlistmaker.presentation.ui.media.PlaylistInfoFragment.Companion.PLAYLIST_ID_KEY
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
@@ -32,7 +33,15 @@ class PlaylistsFragment : Fragment() {
 
         binding.playlistRecyclerView.layoutManager = GridLayoutManager(context, 2)
 
-        playlistAdapter = PlaylistAdapter(onPlaylistClick = null, isInBottomSheet = false)
+        playlistAdapter = PlaylistAdapter(onPlaylistClick = { playlist ->
+            val bundle = Bundle().apply {
+                putLong(PLAYLIST_ID_KEY, playlist.id)
+            }
+            findNavController().navigate(
+                R.id.action_mediaLibraryFragment2_to_playlistInfoFragment,
+                bundle
+            )
+        }, isInBottomSheet = false)
         binding.playlistRecyclerView.adapter = playlistAdapter
 
         playlistsViewModel.playlistsLiveData.observe(viewLifecycleOwner) { playlists ->
@@ -44,6 +53,7 @@ class PlaylistsFragment : Fragment() {
                 binding.emptyText.visibility = View.GONE
                 binding.emptyPlaylistPlaceholder.visibility = View.GONE
             }
+
         }
 
         binding.createPlaylistButton.setOnClickListener {

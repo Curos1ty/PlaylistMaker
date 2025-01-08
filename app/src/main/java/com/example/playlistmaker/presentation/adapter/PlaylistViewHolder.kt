@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.util.getCorrectForm
 import com.example.playlistmaker.util.toPx
 
 class PlaylistViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -19,7 +20,8 @@ class PlaylistViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(playlist: Playlist) {
         playlistNameTextView.text = playlist.name
-        playlistNumberTracksPlaylist.text = "${playlist.trackCount} треков"
+        val trackCountText = "${playlist.trackCount} ${getCorrectForm(playlist.trackCount, listOf("трек", "трека", "треков"))}"
+        playlistNumberTracksPlaylist.text = trackCountText
 
         Glide.with(itemView)
             .load(playlist.coverImageUri)

@@ -27,4 +27,16 @@
         <item name="colorPrimary">@color/black_background</item>
         <item name="colorPrimaryDark">@color/white</item>
     </style>
+
+    <style name="ThemePlaylistInfo" parent="Base.Theme.PlaylistMaker">
+        <item name="android:background">@color/gray_for_search</item>
+        <item name="colorSecondary">@color/black_background</item>
+    </style>
+
+    <style name="PlaylistItemTrack" parent="Base.Theme.PlaylistMaker">
+        <item name="backgroundTint">@color/black_background</item>
+        <item name="android:background">@color/black_background</item>
+        <item name="colorSecondary">@color/black_background</item>
+    </style>
+
 </resources>

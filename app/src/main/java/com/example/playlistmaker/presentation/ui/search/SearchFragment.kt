@@ -41,12 +41,20 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        trackAdapter = TrackAdapter(mutableListOf()) { track ->
-            handleTrackClick(track)
-        }
-        searchHistoryAdapter = TrackAdapter(mutableListOf()) { track ->
-            handleTrackClick(track)
-        }
+        trackAdapter = TrackAdapter(
+            mutableListOf(),
+            onItemClick = { track ->
+                handleTrackClick(track)
+            },
+            onItemLongClick = null
+        )
+        searchHistoryAdapter = TrackAdapter(
+            mutableListOf(),
+            onItemClick = { track ->
+                handleTrackClick(track)
+            },
+            onItemLongClick = null
+        )
 
         binding.searchRecyclerViewItunes.adapter = trackAdapter
         binding.searchHistoryRecyclerView.adapter = searchHistoryAdapter
