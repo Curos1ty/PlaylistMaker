@@ -140,6 +140,9 @@
         <item name="android:textSize">@dimen/text_size_16sp</item>
         <item name="android:layout_marginStart">@dimen/paddingHorizontal_16dp</item>
         <item name="android:layout_marginEnd">@dimen/paddingHorizontal_16dp</item>
+        <item name="android:cursorVisible">true</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:background">@null</item>
     </style>
 
     <style name="playlistInfoText">
@@ -158,4 +161,23 @@
         <item name="android:textColor">@color/black_background</item>
         <item name="android:background">?attr/colorSecondary</item>
     </style>
+
+    <style name="RoundedCornersImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">2dp</item>
+    </style>
+
+    <style name="CustomDialogTheme" parent="Theme.MaterialComponents.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/black_background</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/blue_background</item>
+    </style>
+    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/blue_background</item>
+    </style>
+
 </resources>

@@ -21,7 +21,6 @@
         android:layout_gravity="center"
         android:text="@string/new_playlist"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@id/playlist_recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -46,7 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:text="@string/empty_search"
+        android:gravity="center"
+        android:text="@string/empty_playlist_text"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

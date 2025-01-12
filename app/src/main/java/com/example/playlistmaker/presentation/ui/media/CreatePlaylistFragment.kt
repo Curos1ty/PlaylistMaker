@@ -138,20 +138,20 @@ open class CreatePlaylistFragment : Fragment() {
             val message = getString(R.string.playlist_created, viewModel.currentPlaylistName.value)
             viewModel.savePlaylist(
                 onSuccess = {
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setMessage(message)
-                        .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
-                            dialog.dismiss()
-                            if (hasNavController()) {
-                                findNavController().navigateUp()
-                            } else {
-                                parentFragmentManager.popBackStack()
-                            }
-                        }
-                        .show()
+                    val dialog =
+                        MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogTheme)
+                            .setMessage(message)
+                            .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
+                                dialog.dismiss()
+                                navigateUpOrPopBackStack()
+                            }.create()
+                    dialog.setOnDismissListener{
+                        navigateUpOrPopBackStack()
+                    }
+                    dialog.show()
                 },
                 onError = { errorMessage ->
-                    MaterialAlertDialogBuilder(requireContext())
+                    MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogTheme)
                         .setMessage(getString(errorMessage.messageResId))
                         .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                             dialog.dismiss()
@@ -162,12 +162,20 @@ open class CreatePlaylistFragment : Fragment() {
         }
     }
 
+    private fun navigateUpOrPopBackStack() {
+        if (hasNavController()) {
+            findNavController().navigateUp()
+        } else {
+            parentFragmentManager.popBackStack()
+        }
+    }
+
     private fun showExitConfirmationDialog() {
         if (viewModel.currentPlaylistName.value?.isNotBlank() == true ||
             viewModel.currentPlaylistDescription.value?.isNotBlank() == true ||
             viewModel.currentPlaylistImagePath.value != null
         ) {
-            MaterialAlertDialogBuilder(requireContext())
+            MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogTheme)
                 .setTitle(getString(R.string.dialog_exit_creation_title))
                 .setMessage(getString(R.string.dialog_exit_creation_message))
                 .setPositiveButton(getString(R.string.dialog_exit_positive)) { _, _ ->

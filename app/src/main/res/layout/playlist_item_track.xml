@@ -20,7 +20,7 @@
         android:layout_height="@dimen/layout_wh45dp"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/album_art"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:src="@drawable/search" />
 
 

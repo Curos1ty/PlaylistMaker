@@ -1,7 +1,9 @@
 package com.example.playlistmaker.presentation.ui.media
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,13 +78,33 @@ class PlaylistInfoFragment : Fragment() {
             }
         }
 
+        val displayMetrics = DisplayMetrics()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val display = requireActivity().display
+            display?.getRealMetrics(displayMetrics)
+        } else {
+            @Suppress("DEPRECATION")
+            val display = requireActivity().windowManager.defaultDisplay
+            @Suppress("DEPRECATION")
+            display.getMetrics(displayMetrics)
+        }
+
+        val screenHeight = displayMetrics.heightPixels
+        val peekHeightPercentage = when {
+            screenHeight >= 2400 -> 0.30
+            screenHeight <= 1280 -> 0.1
+            else -> 0.2
+        }
+
+        behavior.peekHeight = (screenHeight * peekHeightPercentage).toInt()
+
         trackAdapter = TrackAdapter(
             trackList = mutableListOf(),
             onItemClick = { track ->
                 handleTrackClick(track)
             },
             onItemLongClick = { track ->
-                MaterialAlertDialogBuilder(requireContext())
+                MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogTheme)
                     .setTitle(getString(R.string.dialog_title_delete_track))
                     .setMessage(getString(R.string.dialog_delete_message_track))
                     .setPositiveButton(getString(R.string.dialog_positive_delete_track)) { _, _ ->
@@ -150,10 +172,11 @@ class PlaylistInfoFragment : Fragment() {
         val tracks = viewModel.tracks.value ?: emptyList()
 
         if (tracks.isEmpty()) {
-            MaterialAlertDialogBuilder(requireContext())
+            MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogTheme)
                 .setMessage(R.string.dialog_playlist_share_empty)
                 .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
                 .show()
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
             val tracksText = tracks
                 .mapIndexed { index, track ->
@@ -168,12 +191,12 @@ class PlaylistInfoFragment : Fragment() {
             val trackCount = tracks.size
             val trackWord = getCorrectForm(trackCount, listOf("трек", "трека", "треков"))
 
-            val message = """
-            ${playlist?.name}
-            ${playlist?.description}
-            $trackCount $trackWord
-            $tracksText
-        """.trimIndent()
+            val message = buildString {
+                append("${playlist?.name}\n")
+                append("${playlist?.description}\n\n")
+                append("$trackCount $trackWord\n")
+                append(tracksText)
+            }
 
             val sendIntent = Intent().apply {
                 action = Intent.ACTION_SEND
@@ -208,7 +231,7 @@ class PlaylistInfoFragment : Fragment() {
 
         menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        MaterialAlertDialogBuilder(requireContext())
+        MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogTheme)
             .setTitle(getString(R.string.playlist_info_delete))
             .setMessage(getString(R.string.playlist_delete_text))
             .setPositiveButton(getString(R.string.yes)) { _, _ ->

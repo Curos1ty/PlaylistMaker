@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.ui.media
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -8,7 +7,7 @@ import com.example.playlistmaker.domain.interactor.PlaylistInteractor
 import com.example.playlistmaker.domain.model.Playlist
 import kotlinx.coroutines.launch
 
-class EditPlaylistViewModel (
+class EditPlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : CreatePlaylistViewModel(playlistInteractor) {
 

@@ -101,7 +101,16 @@ class AudioPlayer : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        audioPlayerViewModel.pauseAudio()
+        if (audioPlayerViewModel.isPlaying.value == true) {
+            audioPlayerViewModel.pauseAudio()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (audioPlayerViewModel.isPlaying.value == true) {
+            audioPlayerViewModel.playAudio()
+        }
     }
 
     override fun onDestroy() {
@@ -167,7 +176,7 @@ class AudioPlayer : AppCompatActivity() {
                     getString(R.string.added_track_to_playlist, playlistName)
                 }
             }
-            MaterialAlertDialogBuilder(this)
+            MaterialAlertDialogBuilder(this, R.style.CustomDialogTheme)
                 .setMessage(message)
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                     dialog.dismiss()

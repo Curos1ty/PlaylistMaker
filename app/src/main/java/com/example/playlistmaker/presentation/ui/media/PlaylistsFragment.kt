@@ -49,6 +49,7 @@ class PlaylistsFragment : Fragment() {
             if (playlists.isEmpty()) {
                 binding.emptyText.visibility = View.VISIBLE
                 binding.emptyPlaylistPlaceholder.visibility = View.VISIBLE
+                binding.playlistRecyclerView.visibility = View.GONE
             } else {
                 binding.emptyText.visibility = View.GONE
                 binding.emptyPlaylistPlaceholder.visibility = View.GONE
