@@ -33,15 +33,18 @@ class PlaylistsFragment : Fragment() {
 
         binding.playlistRecyclerView.layoutManager = GridLayoutManager(context, 2)
 
-        playlistAdapter = PlaylistAdapter(onPlaylistClick = { playlist ->
-            val bundle = Bundle().apply {
-                putLong(PLAYLIST_ID_KEY, playlist.id)
-            }
-            findNavController().navigate(
-                R.id.action_mediaLibraryFragment2_to_playlistInfoFragment,
-                bundle
-            )
-        }, isInBottomSheet = false)
+        playlistAdapter = PlaylistAdapter(
+            onPlaylistClick = { playlist ->
+                val bundle = Bundle().apply {
+                    putLong(PLAYLIST_ID_KEY, playlist.id)
+                }
+                findNavController().navigate(
+                    R.id.action_mediaLibraryFragment2_to_playlistInfoFragment,
+                    bundle
+                )
+            }, isInBottomSheet = false,
+            cornerRadius = RADIUS_PLAYLISTS
+        )
         binding.playlistRecyclerView.adapter = playlistAdapter
 
         playlistsViewModel.playlistsLiveData.observe(viewLifecycleOwner) { playlists ->
@@ -81,5 +84,6 @@ class PlaylistsFragment : Fragment() {
     companion object {
         fun newInstance() = PlaylistsFragment()
         const val IS_FROM_ACTIVITY = "isFromActivity"
+        const val RADIUS_PLAYLISTS = 8
     }
 }

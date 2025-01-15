@@ -11,22 +11,31 @@ import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.util.getCorrectForm
 import com.example.playlistmaker.util.toPx
 
-class PlaylistViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val cornerRadiusValue = 2
+class PlaylistViewHolder(itemView: View, private val cornerRadius: Int) :
+    RecyclerView.ViewHolder(itemView) {
 
     private val playlistNameTextView: TextView = itemView.findViewById(R.id.playlist_title)
-    private val playlistNumberTracksPlaylist: TextView = itemView.findViewById(R.id.number_tracks_playlist)
+    private val playlistNumberTracksPlaylist: TextView =
+        itemView.findViewById(R.id.number_tracks_playlist)
     private val playlistCoverImageView: ImageView = itemView.findViewById(R.id.playlist_image)
 
     fun bind(playlist: Playlist) {
         playlistNameTextView.text = playlist.name
-        val trackCountText = "${playlist.trackCount} ${getCorrectForm(playlist.trackCount, listOf("трек", "трека", "треков"))}"
+        val trackCountText = "${playlist.trackCount} ${
+            getCorrectForm(
+                playlist.trackCount,
+                listOf("трек", "трека", "треков")
+            )
+        }"
         playlistNumberTracksPlaylist.text = trackCountText
 
         Glide.with(itemView)
             .load(playlist.coverImageUri)
             .placeholder(R.drawable.placeholder_music)
-            .transform(RoundedCorners(itemView.context.toPx(cornerRadiusValue).toInt()))
+            .transform(
+                com.bumptech.glide.load.resource.bitmap.CenterCrop(),
+                RoundedCorners(itemView.context.toPx(cornerRadius).toInt())
+            )
             .into(playlistCoverImageView)
     }
 }

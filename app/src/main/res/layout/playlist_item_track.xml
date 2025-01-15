@@ -10,8 +10,8 @@
     android:orientation="horizontal"
     android:paddingStart="@dimen/layout_marginStart_13dp"
     android:paddingEnd="@dimen/layout_marginEnd_12dp"
-    android:theme="@style/PlaylistItemTrack"
     app:cardCornerRadius="@dimen/cardCornerRadius_8dp"
+    android:background="?attr/android:colorBackground"
     app:cardElevation="4dp">
 
     <ImageView

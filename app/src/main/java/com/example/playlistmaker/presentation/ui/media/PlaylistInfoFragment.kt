@@ -26,7 +26,7 @@ class PlaylistInfoFragment : Fragment() {
     private var playlistId: Long? = null
     private var _binding: FragmentPlaylistInfoBinding? = null
     private val binding get() = _binding!!
-
+    private var isMenuOpen = false
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var menuBottomSheetBehavior: BottomSheetBehavior<View>
@@ -78,6 +78,19 @@ class PlaylistInfoFragment : Fragment() {
             }
         }
 
+        menuBottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                isMenuOpen =
+                    newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_EXPANDED
+                binding.playlistRecyclerView.isClickable = !isMenuOpen
+                binding.playlistRecyclerView.isEnabled = !isMenuOpen
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
+
         val displayMetrics = DisplayMetrics()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val display = requireActivity().display
@@ -101,19 +114,23 @@ class PlaylistInfoFragment : Fragment() {
         trackAdapter = TrackAdapter(
             trackList = mutableListOf(),
             onItemClick = { track ->
-                handleTrackClick(track)
+                if (!isMenuOpen) {
+                    handleTrackClick(track)
+                }
             },
             onItemLongClick = { track ->
-                MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogTheme)
-                    .setTitle(getString(R.string.dialog_title_delete_track))
-                    .setMessage(getString(R.string.dialog_delete_message_track))
-                    .setPositiveButton(getString(R.string.dialog_positive_delete_track)) { _, _ ->
-                        viewModel.deleteTrackFromPlaylist(track.trackId)
-                    }
-                    .setNegativeButton(R.string.dialog_exit_negative) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
+                if (!isMenuOpen) {
+                    MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogTheme)
+                        .setTitle(getString(R.string.dialog_title_delete_track))
+                        .setMessage(getString(R.string.dialog_delete_message_track))
+                        .setPositiveButton(getString(R.string.dialog_positive_delete_track)) { _, _ ->
+                            viewModel.deleteTrackFromPlaylist(track.trackId)
+                        }
+                        .setNegativeButton(R.string.dialog_exit_negative) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
+                }
             }
 
         )

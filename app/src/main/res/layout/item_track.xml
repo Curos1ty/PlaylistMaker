@@ -7,7 +7,6 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal"
-    android:theme="@style/PlaylistItemTrack"
     android:paddingStart="@dimen/layout_marginStart_13dp"
     android:paddingEnd="@dimen/layout_marginEnd_12dp"
     app:cardCornerRadius="@dimen/cardCornerRadius_8dp"

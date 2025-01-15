@@ -5,14 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
+import com.example.playlistmaker.util.toPx
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditPlaylistFragment : CreatePlaylistFragment() {
@@ -25,8 +26,13 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
 
         pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
-                binding.playlistCoverImage.setImageURI(uri)
-                binding.playlistCoverImage.scaleType = ImageView.ScaleType.CENTER_CROP
+                Glide.with(this)
+                    .load(uri)
+                    .transform(
+                        com.bumptech.glide.load.resource.bitmap.CenterCrop(),
+                        RoundedCorners(requireContext().toPx(RADIUS).toInt())
+                    )
+                    .into(binding.playlistCoverImage)
                 viewModel.setImagePath(uri)
             }
         }
@@ -72,6 +78,10 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
             if (coverImageUri != null) {
                 Glide.with(this)
                     .load(coverImageUri)
+                    .transform(
+                        com.bumptech.glide.load.resource.bitmap.CenterCrop(),
+                        RoundedCorners(requireContext().toPx(RADIUS).toInt())
+                    )
                     .into(binding.playlistCoverImage)
             }
         }
@@ -99,6 +109,7 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
 
     companion object {
         const val PLAYLIST_ID_KEY = "playlistId"
+        const val RADIUS = 8
 
         fun newInstance(playlistId: Long): EditPlaylistFragment {
             val fragment = EditPlaylistFragment()

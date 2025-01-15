@@ -8,7 +8,8 @@ import com.example.playlistmaker.domain.model.Playlist
 
 class PlaylistAdapter(
     private val onPlaylistClick: ((Playlist) -> Unit)? = null,
-    private val isInBottomSheet: Boolean = false
+    private val isInBottomSheet: Boolean = false,
+    private val cornerRadius: Int
 ) : RecyclerView.Adapter<PlaylistViewHolder>() {
 
     private var playlists: List<Playlist> = emptyList()
@@ -25,7 +26,7 @@ class PlaylistAdapter(
             R.layout.item_playlist_fragment
         }
         val itemView = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
-        return PlaylistViewHolder(itemView)
+        return PlaylistViewHolder(itemView, cornerRadius)
     }
 
     override fun getItemCount(): Int = playlists.size

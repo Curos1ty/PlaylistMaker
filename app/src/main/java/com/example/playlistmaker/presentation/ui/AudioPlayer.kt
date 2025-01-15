@@ -162,7 +162,8 @@ class AudioPlayer : AppCompatActivity() {
         playlistAdapter = PlaylistAdapter(
             onPlaylistClick = { playlist ->
                 audioPlayerViewModel.addTrackToPlaylist(playlist)
-            }, isInBottomSheet = true
+            }, isInBottomSheet = true,
+            cornerRadius = RADIUS_PLAYLISTS
         )
         audioPlayerViewModel.playlistActionStatus.observe(this) { (status, playlistName) ->
             val message = when (status) {
@@ -235,5 +236,6 @@ class AudioPlayer : AppCompatActivity() {
         const val DATA_TRACK = "trackData"
         const val TRACK_DURATION = "00:00"
         const val RADIUS = 8
+        const val RADIUS_PLAYLISTS = 2
     }
 }

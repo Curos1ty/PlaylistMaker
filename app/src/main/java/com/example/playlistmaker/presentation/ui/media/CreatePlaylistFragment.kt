@@ -16,9 +16,15 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.example.playlistmaker.presentation.ui.AudioPlayer
+import com.example.playlistmaker.util.toPx
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -145,7 +151,7 @@ open class CreatePlaylistFragment : Fragment() {
                                 dialog.dismiss()
                                 navigateUpOrPopBackStack()
                             }.create()
-                    dialog.setOnDismissListener{
+                    dialog.setOnDismissListener {
                         navigateUpOrPopBackStack()
                     }
                     dialog.show()
@@ -214,8 +220,7 @@ open class CreatePlaylistFragment : Fragment() {
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
-                    binding.playlistCoverImage.setImageURI(uri)
-                    binding.playlistCoverImage.scaleType = ImageView.ScaleType.CENTER_CROP
+                    loadRoundedImage(uri)
                     viewModel.setImagePath(uri)
                 }
             }
@@ -230,6 +235,20 @@ open class CreatePlaylistFragment : Fragment() {
                 binding.playlistCoverImage.scaleType = ImageView.ScaleType.CENTER_CROP
             }
         }
+    }
+
+    private fun loadRoundedImage(uri: Uri) {
+        Glide.with(requireContext())
+            .load(uri).apply(
+                RequestOptions().transform(
+                    MultiTransformation(
+                        CenterCrop(), RoundedCorners(
+                            requireContext().toPx(RADIUS).toInt()
+                        )
+                    )
+                )
+            )
+            .into(binding.playlistCoverImage)
     }
 
     private fun hasNavController(): Boolean {
@@ -251,5 +270,6 @@ open class CreatePlaylistFragment : Fragment() {
         }
 
         const val IS_FROM_ACTIVITY = "isFromActivity"
+        const val RADIUS = 8
     }
 }

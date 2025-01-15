@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/ThemeAudioPlayerActivity"
     tools:context=".presentation.ui.AudioPlayer">
 
     <androidx.fragment.app.FragmentContainerView
@@ -276,6 +275,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="?attr/android:colorBackground"
         app:behavior_hideable="true"
         app:behavior_peekHeight="440dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">

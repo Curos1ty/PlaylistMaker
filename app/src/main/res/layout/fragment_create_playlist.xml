@@ -4,7 +4,6 @@
     android:id="@+id/fragment_general_create_playlist"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/ThemeAudioPlayerActivity"
     android:visibility="visible">
 
 
@@ -38,7 +37,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="26dp"
                 android:layout_marginEnd="24dp"
-                app:cardBackgroundColor="?attr/colorPrimary"
+                app:cardBackgroundColor="?attr/android:colorBackground"
                 app:cardElevation="0dp"
                 app:cardPreventCornerOverlap="false"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +72,6 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edit_title_playlist"
                     android:layout_width="match_parent"
-
                     android:layout_height="wrap_content"
                     android:imeOptions="actionDone"
                     android:inputType="text" />
