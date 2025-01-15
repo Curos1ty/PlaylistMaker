@@ -32,7 +32,10 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         Glide.with(itemView)
             .load(track.artworkUrl100)
             .placeholder(R.drawable.placeholder_music)
-            .transform(RoundedCorners(itemView.context.toPx(cornerRadiusValue).toInt()))
+            .transform(
+                com.bumptech.glide.load.resource.bitmap.CenterCrop(),
+                RoundedCorners(itemView.context.toPx(cornerRadiusValue).toInt())
+            )
             .into(artworkImageView)
 
 

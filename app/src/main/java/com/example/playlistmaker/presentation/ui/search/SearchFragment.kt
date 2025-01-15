@@ -41,22 +41,33 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        trackAdapter = TrackAdapter(mutableListOf()) { track ->
-            handleTrackClick(track)
-        }
-        searchHistoryAdapter = TrackAdapter(mutableListOf()) { track ->
-            handleTrackClick(track)
-        }
+        trackAdapter = TrackAdapter(
+            mutableListOf(),
+            onItemClick = { track ->
+                handleTrackClick(track)
+            },
+            onItemLongClick = null
+        )
+        searchHistoryAdapter = TrackAdapter(
+            mutableListOf(),
+            onItemClick = { track ->
+                handleTrackClick(track)
+            },
+            onItemLongClick = null
+        )
 
         binding.searchRecyclerViewItunes.adapter = trackAdapter
         binding.searchHistoryRecyclerView.adapter = searchHistoryAdapter
 
-
         searchViewModel.tracks.observe(viewLifecycleOwner) { tracks ->
             if (tracks.isNotEmpty()) {
+                binding.searchRecyclerViewItunes.visibility =
+                    if (tracks.isNotEmpty()) View.VISIBLE else View.GONE
+                binding.searchHistoryLayout.visibility = View.GONE
                 trackAdapter.updateData(tracks)
-                binding.searchRecyclerViewItunes.isVisible = true
-                binding.searchHistoryLayout.isVisible = false
+            } else {
+                binding.searchRecyclerViewItunes.visibility =
+                    if (tracks.isNotEmpty()) View.VISIBLE else View.GONE
             }
         }
 

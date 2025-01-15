@@ -1,12 +1,24 @@
 package com.example.playlistmaker.data.db
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.ForeignKey
+import androidx.room.Index
 import com.example.playlistmaker.domain.model.Track
 
-@Entity(tableName = "playlist_tracks")
+@Entity(
+    tableName = "playlist_tracks", primaryKeys = ["trackId", "playlistId"],
+    indices = [Index(value = ["playlistId"])],
+    foreignKeys = [
+        ForeignKey(
+            entity = PlaylistEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["playlistId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+)
 data class PlaylistTrackEntity(
-    @PrimaryKey val trackId: Long,
+    val trackId: Long,
     val trackName: String,
     val artistName: String,
     val albumName: String?,
@@ -15,7 +27,8 @@ data class PlaylistTrackEntity(
     val previewUrl: String?,
     val releaseDate: String? = null,
     val primaryGenreName: String? = null,
-    val country: String? = null
+    val country: String? = null,
+    val playlistId: Long
 ) {
     fun toDomain(): Track {
         return Track(
@@ -33,7 +46,7 @@ data class PlaylistTrackEntity(
     }
 
     companion object {
-        fun fromDomain(track: Track): PlaylistTrackEntity {
+        fun fromDomain(track: Track, playlistId: Long): PlaylistTrackEntity {
             return PlaylistTrackEntity(
                 trackId = track.trackId,
                 trackName = track.trackName,
@@ -41,7 +54,12 @@ data class PlaylistTrackEntity(
                 albumName = track.collectionName,
                 trackTimeMillis = track.trackTimeMillis,
                 artworkUrl = track.artworkUrl512,
-                previewUrl = track.previewUrl
+                previewUrl = track.previewUrl,
+                releaseDate = track.releaseDate,
+                primaryGenreName = track.primaryGenreName,
+                country = track.country,
+                playlistId = playlistId
+
             )
         }
     }

@@ -29,9 +29,13 @@ class FavoritesTracksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        trackAdapter = TrackAdapter(mutableListOf()) { track ->
-            handleTrackClick(track)
-        }
+        trackAdapter = TrackAdapter(
+            mutableListOf(),
+            onItemClick = { track ->
+                handleTrackClick(track)
+            },
+            onItemLongClick = null
+        )
         binding.favoritesRecyclerView.adapter = trackAdapter
         favoritesTracksViewModel.favoriteTrackLiveData.observe(viewLifecycleOwner) { tracks ->
             if (tracks.isNotEmpty()) {

@@ -10,4 +10,9 @@ interface PlaylistInteractor {
     suspend fun addTrackToPlaylist(track: Track, playlist: Playlist): Boolean
     suspend fun savePlaylist(playlist: Playlist): Result<Unit>
     fun getImagePath(uri: Uri): String?
+    suspend fun getPlaylistById(id: Long): Playlist?
+    suspend fun getTracksForPlaylist(playlistId: Long): List<Track>
+    suspend fun deleteTrackFromPlaylist(trackId: Long, playlistId: Long)
+    suspend fun updatePlaylist(playlist: Playlist)
+    suspend fun deletePlaylist(id: Long)
 }

@@ -37,4 +37,24 @@ class PlaylistInteractorImpl(
     override fun getImagePath(uri: Uri): String? {
         return fileStorage.saveImage(uri)
     }
+
+    override suspend fun getPlaylistById(id: Long): Playlist? {
+        return repository.getPlaylistById(id)
+    }
+
+    override suspend fun getTracksForPlaylist(playlistId: Long): List<Track> {
+        return repository.getTracksForPlaylist(playlistId)
+    }
+
+    override suspend fun deleteTrackFromPlaylist(trackId: Long, playlistId: Long) {
+        repository.deleteTrackFromPlaylist(trackId, playlistId)
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        repository.updatePlaylist(playlist)
+    }
+
+    override suspend fun deletePlaylist(id: Long) {
+        repository.deletePlaylistById(id)
+    }
 }

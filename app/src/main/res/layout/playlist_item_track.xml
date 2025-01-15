@@ -11,16 +11,17 @@
     android:paddingStart="@dimen/layout_marginStart_13dp"
     android:paddingEnd="@dimen/layout_marginEnd_12dp"
     app:cardCornerRadius="@dimen/cardCornerRadius_8dp"
+    android:background="?attr/android:colorBackground"
     app:cardElevation="4dp">
 
     <ImageView
-        android:id="@+id/playlist_image"
+        android:id="@+id/songImage"
         android:layout_width="@dimen/layout_wh45dp"
         android:layout_height="@dimen/layout_wh45dp"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/album_art"
-        android:scaleType="fitCenter"
-        android:src="@drawable/placeholder_music" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/search" />
 
 
     <LinearLayout
@@ -33,14 +34,14 @@
         android:paddingEnd="@dimen/layout_margin_top_8dp">
 
         <TextView
-            android:id="@+id/playlist_title"
+            android:id="@+id/songTitle"
             style="@style/textItemSongTrack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="@dimen/text_size_16sp"
-            tools:text="Best songs 2021" />
+            tools:text="123" />
 
 
         <LinearLayout
@@ -49,7 +50,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/number_tracks_playlist"
+                android:id="@+id/songArtist"
                 style="@style/textItemArtistDurationTrack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -57,7 +58,26 @@
                 android:maxEms="20"
                 android:maxLines="1"
                 android:textSize="@dimen/text_size_11sp"
-                tools:text="98 треков" />
+                tools:text="123" />
+
+            <TextView
+                android:id="@+id/durationTrack"
+                style="@style/textItemArtistDurationTrack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="11sp"
+                tools:text=" 00:00" />
         </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/songOpen"
+        style="@style/imageArrowForSong"
+        android:layout_width="@dimen/layout_wh24dp"
+        android:layout_height="@dimen/layout_wh24dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/image_arrow_right" />
+
 </LinearLayout>

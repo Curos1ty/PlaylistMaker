@@ -16,15 +16,21 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.example.playlistmaker.presentation.ui.AudioPlayer
+import com.example.playlistmaker.util.toPx
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CreatePlaylistFragment : Fragment() {
-    private var _binding: FragmentCreatePlaylistBinding? = null
-    private val binding get() = _binding!!
+open class CreatePlaylistFragment : Fragment() {
+    protected var _binding: FragmentCreatePlaylistBinding? = null
+    protected val binding get() = _binding!!
     private val viewModel: CreatePlaylistViewModel by viewModel()
 
     override fun onCreateView(
@@ -42,16 +48,16 @@ class CreatePlaylistFragment : Fragment() {
         setupListeners()
         setupImageSelection()
 
-        if (viewModel.currentPlaylistImagePath != null) {
+        if (viewModel.currentPlaylistImagePath.value != null) {
             binding.playlistCoverImage.scaleType = ImageView.ScaleType.CENTER_CROP
-            binding.playlistCoverImage.setImageURI(Uri.parse(viewModel.currentPlaylistImagePath))
+            binding.playlistCoverImage.setImageURI(Uri.parse(viewModel.currentPlaylistImagePath.value))
         }
 
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            if (viewModel.currentPlaylistName.isNotBlank() ||
-                viewModel.currentPlaylistDescription.isNotBlank() ||
-                viewModel.currentPlaylistImagePath != null
+            if (viewModel.currentPlaylistName.value?.isNotBlank() == true ||
+                viewModel.currentPlaylistDescription.value?.isNotBlank() == true ||
+                viewModel.currentPlaylistImagePath.value != null
             ) {
                 showExitConfirmationDialog()
             } else {
@@ -135,23 +141,23 @@ class CreatePlaylistFragment : Fragment() {
         }
 
         binding.createPlaylistButton.setOnClickListener {
-            val message = getString(R.string.playlist_created, viewModel.currentPlaylistName)
+            val message = getString(R.string.playlist_created, viewModel.currentPlaylistName.value)
             viewModel.savePlaylist(
                 onSuccess = {
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setMessage(message)
-                        .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
-                            dialog.dismiss()
-                            if (hasNavController()) {
-                                findNavController().navigateUp()
-                            } else {
-                                parentFragmentManager.popBackStack()
-                            }
-                        }
-                        .show()
+                    val dialog =
+                        MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogTheme)
+                            .setMessage(message)
+                            .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
+                                dialog.dismiss()
+                                navigateUpOrPopBackStack()
+                            }.create()
+                    dialog.setOnDismissListener {
+                        navigateUpOrPopBackStack()
+                    }
+                    dialog.show()
                 },
                 onError = { errorMessage ->
-                    MaterialAlertDialogBuilder(requireContext())
+                    MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogTheme)
                         .setMessage(getString(errorMessage.messageResId))
                         .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                             dialog.dismiss()
@@ -162,12 +168,20 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
+    private fun navigateUpOrPopBackStack() {
+        if (hasNavController()) {
+            findNavController().navigateUp()
+        } else {
+            parentFragmentManager.popBackStack()
+        }
+    }
+
     private fun showExitConfirmationDialog() {
-        if (viewModel.currentPlaylistName.isNotBlank() ||
-            viewModel.currentPlaylistDescription.isNotBlank() ||
-            viewModel.currentPlaylistImagePath != null
+        if (viewModel.currentPlaylistName.value?.isNotBlank() == true ||
+            viewModel.currentPlaylistDescription.value?.isNotBlank() == true ||
+            viewModel.currentPlaylistImagePath.value != null
         ) {
-            MaterialAlertDialogBuilder(requireContext())
+            MaterialAlertDialogBuilder(requireContext(), R.style.CustomDialogTheme)
                 .setTitle(getString(R.string.dialog_exit_creation_title))
                 .setMessage(getString(R.string.dialog_exit_creation_message))
                 .setPositiveButton(getString(R.string.dialog_exit_positive)) { _, _ ->
@@ -206,8 +220,7 @@ class CreatePlaylistFragment : Fragment() {
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
-                    binding.playlistCoverImage.setImageURI(uri)
-                    binding.playlistCoverImage.scaleType = ImageView.ScaleType.CENTER_CROP
+                    loadRoundedImage(uri)
                     viewModel.setImagePath(uri)
                 }
             }
@@ -216,10 +229,26 @@ class CreatePlaylistFragment : Fragment() {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-        if (viewModel.currentPlaylistImagePath != null) {
-            binding.playlistCoverImage.setImageURI(Uri.parse(viewModel.currentPlaylistImagePath))
-            binding.playlistCoverImage.scaleType = ImageView.ScaleType.CENTER_CROP
+        viewModel.currentPlaylistImagePath.observe(viewLifecycleOwner) { coverImageUri ->
+            if (coverImageUri != null) {
+                binding.playlistCoverImage.setImageURI(Uri.parse(coverImageUri))
+                binding.playlistCoverImage.scaleType = ImageView.ScaleType.CENTER_CROP
+            }
         }
+    }
+
+    private fun loadRoundedImage(uri: Uri) {
+        Glide.with(requireContext())
+            .load(uri).apply(
+                RequestOptions().transform(
+                    MultiTransformation(
+                        CenterCrop(), RoundedCorners(
+                            requireContext().toPx(RADIUS).toInt()
+                        )
+                    )
+                )
+            )
+            .into(binding.playlistCoverImage)
     }
 
     private fun hasNavController(): Boolean {
@@ -241,5 +270,6 @@ class CreatePlaylistFragment : Fragment() {
         }
 
         const val IS_FROM_ACTIVITY = "isFromActivity"
+        const val RADIUS = 8
     }
 }

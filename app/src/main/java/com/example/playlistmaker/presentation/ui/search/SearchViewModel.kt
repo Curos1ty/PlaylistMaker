@@ -54,24 +54,27 @@ class SearchViewModel(
         _showNoResultsPlaceholder.value = false
         _showErrorPlaceholder.value = false
         _showProgressBar.value = true
+        _tracks.value = emptyList()
         searchInteractor.searchSongs(query).collectLatest { result ->
             _showProgressBar.value = false
             when (result) {
                 is Result.Success -> {
                     val tracks = result.data ?: emptyList()
+                    _tracks.value = tracks
                     if (tracks.isEmpty()) {
                         _showNoResultsPlaceholder.value = true
                     } else {
-                        _tracks.value = tracks
                         _searchHistory.value = emptyList()
                     }
                 }
 
                 is Result.NetworkError -> {
+                    _tracks.value = emptyList()
                     _showErrorPlaceholder.value = true
                 }
 
                 is Result.Error -> {
+                    _tracks.value = emptyList()
                     _showErrorPlaceholder.value = true
                 }
             }

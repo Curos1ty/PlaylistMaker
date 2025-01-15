@@ -101,7 +101,16 @@ class AudioPlayer : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        audioPlayerViewModel.pauseAudio()
+        if (audioPlayerViewModel.isPlaying.value == true) {
+            audioPlayerViewModel.pauseAudio()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (audioPlayerViewModel.isPlaying.value == true) {
+            audioPlayerViewModel.playAudio()
+        }
     }
 
     override fun onDestroy() {
@@ -153,7 +162,8 @@ class AudioPlayer : AppCompatActivity() {
         playlistAdapter = PlaylistAdapter(
             onPlaylistClick = { playlist ->
                 audioPlayerViewModel.addTrackToPlaylist(playlist)
-            }, isInBottomSheet = true
+            }, isInBottomSheet = true,
+            cornerRadius = RADIUS_PLAYLISTS
         )
         audioPlayerViewModel.playlistActionStatus.observe(this) { (status, playlistName) ->
             val message = when (status) {
@@ -167,7 +177,7 @@ class AudioPlayer : AppCompatActivity() {
                     getString(R.string.added_track_to_playlist, playlistName)
                 }
             }
-            MaterialAlertDialogBuilder(this)
+            MaterialAlertDialogBuilder(this, R.style.CustomDialogTheme)
                 .setMessage(message)
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                     dialog.dismiss()
@@ -226,5 +236,6 @@ class AudioPlayer : AppCompatActivity() {
         const val DATA_TRACK = "trackData"
         const val TRACK_DURATION = "00:00"
         const val RADIUS = 8
+        const val RADIUS_PLAYLISTS = 2
     }
 }

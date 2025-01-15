@@ -17,6 +17,17 @@ object TimeUtils {
     }
 }
 
+fun getCorrectForm(count: Int, forms: List<String>): String {
+    val mod10 = count % 10
+    val mod100 = count % 100
+    return when {
+        mod100 in 11..19 -> forms[2]
+        mod10 == 1 -> forms[0]
+        mod10 in 2..4 -> forms[1]
+        else -> forms[2]
+    }
+}
+
 sealed class Result<out T> {
     data class Success<out T>(val data: T) : Result<T>()
     data class Error(val exception: Throwable) : Result<Nothing>()

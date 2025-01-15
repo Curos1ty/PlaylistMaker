@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.presentation.adapter.PlaylistAdapter
+import com.example.playlistmaker.presentation.ui.media.PlaylistInfoFragment.Companion.PLAYLIST_ID_KEY
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
@@ -32,7 +33,18 @@ class PlaylistsFragment : Fragment() {
 
         binding.playlistRecyclerView.layoutManager = GridLayoutManager(context, 2)
 
-        playlistAdapter = PlaylistAdapter(onPlaylistClick = null, isInBottomSheet = false)
+        playlistAdapter = PlaylistAdapter(
+            onPlaylistClick = { playlist ->
+                val bundle = Bundle().apply {
+                    putLong(PLAYLIST_ID_KEY, playlist.id)
+                }
+                findNavController().navigate(
+                    R.id.action_mediaLibraryFragment2_to_playlistInfoFragment,
+                    bundle
+                )
+            }, isInBottomSheet = false,
+            cornerRadius = RADIUS_PLAYLISTS
+        )
         binding.playlistRecyclerView.adapter = playlistAdapter
 
         playlistsViewModel.playlistsLiveData.observe(viewLifecycleOwner) { playlists ->
@@ -40,10 +52,12 @@ class PlaylistsFragment : Fragment() {
             if (playlists.isEmpty()) {
                 binding.emptyText.visibility = View.VISIBLE
                 binding.emptyPlaylistPlaceholder.visibility = View.VISIBLE
+                binding.playlistRecyclerView.visibility = View.GONE
             } else {
                 binding.emptyText.visibility = View.GONE
                 binding.emptyPlaylistPlaceholder.visibility = View.GONE
             }
+
         }
 
         binding.createPlaylistButton.setOnClickListener {
@@ -70,5 +84,6 @@ class PlaylistsFragment : Fragment() {
     companion object {
         fun newInstance() = PlaylistsFragment()
         const val IS_FROM_ACTIVITY = "isFromActivity"
+        const val RADIUS_PLAYLISTS = 8
     }
 }
