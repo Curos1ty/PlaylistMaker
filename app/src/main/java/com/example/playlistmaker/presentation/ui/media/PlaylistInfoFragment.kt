@@ -261,6 +261,11 @@ class PlaylistInfoFragment : Fragment() {
             .show()
     }
 
+    override fun onResume() {
+        super.onResume()
+        isMenuOpen = menuBottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
